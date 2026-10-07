@@ -77,7 +77,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-
     images: [
       "/E4170FD5-E76B-4B48-8FCB-354D44386823.png",
     ],
@@ -101,11 +100,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-
-    googleBot: {
-      index: true,
-      follow: true,
-    },
   },
 };
 
@@ -121,6 +115,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        {/* 네이버 서치어드바이저 소유확인 */}
+        <meta
+          name="naver-site-verification"
+          content="0b56d1e507da8bb0469294e9d3938606769f1abd"
+        />
+
         <meta
           name="theme-color"
           content="#0b63ce"
@@ -141,39 +141,26 @@ export default function RootLayout({
           href="/E4170FD5-E76B-4B48-8FCB-354D44386823.png"
         />
 
-        {/* =====================================
-            구조화 데이터
-        ===================================== */}
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-
               "@type": "LocalBusiness",
-
               name: "누수대학",
-
               url: SITE_URL,
-
               image:
                 `${SITE_URL}/E4170FD5-E76B-4B48-8FCB-354D44386823.png`,
-
               telephone: "010-3925-6115",
-
               founder: {
                 "@type": "Person",
                 name: "김대식",
               },
-
               description: SITE_DESCRIPTION,
-
               areaServed: {
                 "@type": "Country",
                 name: "대한민국",
               },
-
               knowsAbout: [
                 "누수탐지",
                 "누수공사",
