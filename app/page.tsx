@@ -78,9 +78,6 @@ const SERVICES = [
 
 /* =====================================
    출장 지역
-
-   서울 도심 중심으로
-   지나치게 먼 외곽 지역은 우선 제외
 ===================================== */
 
 const REGIONS = [
@@ -109,16 +106,18 @@ const REGIONS = [
     name: "경기",
     slug: "gyeonggi",
     districts: [
-      { name: "고양시", slug: "goyang" },
-      { name: "김포시", slug: "gimpo" },
       { name: "부천시", slug: "bucheon" },
-      { name: "광명시", slug: "gwangmyeong" },
+      { name: "시흥시", slug: "siheung" },
+      { name: "안산시", slug: "ansan" },
       { name: "안양시", slug: "anyang" },
-      { name: "과천시", slug: "gwacheon" },
+      { name: "수원시", slug: "suwon" },
+      { name: "화성시", slug: "hwaseong" },
+      { name: "평택시", slug: "pyeongtaek" },
       { name: "의왕시", slug: "uiwang" },
-      { name: "성남시", slug: "seongnam" },
-      { name: "하남시", slug: "hanam" },
-      { name: "구리시", slug: "guri" },
+      { name: "김포시", slug: "gimpo" },
+      { name: "파주시", slug: "paju" },
+      { name: "광명시", slug: "gwangmyeong" },
+      { name: "과천시", slug: "gwacheon" },
     ],
   },
 
@@ -227,7 +226,7 @@ export default function Home() {
       </header>
 
       {/* =====================================
-          메인 HERO
+          HERO
       ===================================== */}
 
       <section
@@ -527,7 +526,7 @@ export default function Home() {
             >
               서울 · 경기 · 인천
               <br />
-              가까운 수도권 지역을 중심으로 출장합니다.
+              수도권 주요 지역을 중심으로 출장합니다.
             </p>
           </div>
 
