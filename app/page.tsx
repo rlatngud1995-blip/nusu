@@ -42,7 +42,7 @@ const SERVICES = [
     subtitle: "정확한 원인 확인",
     icon: "🔎",
     description:
-      "눈에 보이지 않는 누수 위치와 원인을 확인하여 필요한 작업 범위를 판단합니다.",
+      "배관, 방수층, 창틀, 옥상 등 다양한 가능성을 확인해 누수 원인을 점검합니다.",
   },
   {
     slug: "pipe-leak",
@@ -50,7 +50,7 @@ const SERVICES = [
     subtitle: "급수·배관 점검",
     icon: "🔧",
     description:
-      "급수관 및 각종 배관의 누수 여부를 확인하고 현장 상태에 맞게 안내합니다.",
+      "직수·온수·난방 배관 등 바닥이나 벽 내부 배관의 누수 가능성을 확인합니다.",
   },
   {
     slug: "bathroom-leak",
@@ -58,7 +58,7 @@ const SERVICES = [
     subtitle: "욕실·방수 점검",
     icon: "🚿",
     description:
-      "욕실 바닥, 배수구, 배관, 방수층 등 다양한 누수 원인을 확인합니다.",
+      "욕실 바닥, 배수구, 배관, 방수층 등 다양한 욕실 누수 원인을 확인합니다.",
   },
   {
     slug: "ceiling-leak",
@@ -66,7 +66,7 @@ const SERVICES = [
     subtitle: "천장 물샘 점검",
     icon: "💧",
     description:
-      "천장 얼룩과 물 떨어짐의 원인을 확인하여 상부 누수 가능성을 점검합니다.",
+      "천장 얼룩과 물 떨어짐의 원인이 배관·방수·외부 유입인지 확인합니다.",
   },
   {
     slug: "water-leak",
@@ -74,7 +74,7 @@ const SERVICES = [
     subtitle: "수도계량기 점검",
     icon: "🚰",
     description:
-      "수도요금 증가와 계량기 회전 등 수도누수 의심 증상을 확인합니다.",
+      "수도요금 증가, 계량기 회전, 수도 압력 변화 등 수도누수 의심 증상을 확인합니다.",
   },
   {
     slug: "apartment-leak",
@@ -82,7 +82,62 @@ const SERVICES = [
     subtitle: "세대 간 누수 점검",
     icon: "🏢",
     description:
-      "아파트 세대 간 누수와 욕실·주방·배관 문제를 종합적으로 확인합니다.",
+      "아파트 세대 간 누수와 욕실·배관·방수층 문제를 종합적으로 확인합니다.",
+  },
+];
+
+/* =====================================
+   대표 작업사진
+===================================== */
+
+const WORK_PHOTOS = [
+  {
+    href: "/services/ceiling-leak",
+    src: "/IMG_1548.jpeg",
+    title: "옥상방수 작업 전",
+    badge: "BEFORE",
+    description:
+      "기존 옥상 방수층이 노후되고 표면 손상이 확인되는 상태입니다.",
+  },
+  {
+    href: "/services/ceiling-leak",
+    src: "/IMG_1549.jpeg",
+    title: "옥상방수 작업 후",
+    badge: "AFTER",
+    description:
+      "옥상 방수 작업 후 표면이 깔끔하게 정리된 상태입니다.",
+  },
+  {
+    href: "/services/bathroom-leak",
+    src: "/IMG_1547.jpeg",
+    title: "욕실 방수작업",
+    badge: "욕실 방수",
+    description:
+      "욕실 바닥 방수 작업을 진행한 현장 사진입니다.",
+  },
+  {
+    href: "/services/ceiling-leak",
+    src: "/IMG_1546.jpeg",
+    title: "윗층 누수 흔적",
+    badge: "천장 누수",
+    description:
+      "천장 몰딩 주변으로 누수 흔적이 확인되는 사례입니다.",
+  },
+  {
+    href: "/services/pipe-leak",
+    src: "/IMG_1545.jpeg",
+    title: "수도배관누수 작업",
+    badge: "배관누수",
+    description:
+      "바닥을 부분 개방해 수도배관 누수 위치를 확인하는 작업입니다.",
+  },
+  {
+    href: "/services/water-leak",
+    src: "/IMG_1544.jpeg",
+    title: "수도배관 누수 점검",
+    badge: "수도누수",
+    description:
+      "배관을 노출한 뒤 누수 지점을 점검하는 현장 사진입니다.",
   },
 ];
 
@@ -312,19 +367,6 @@ export default function Home() {
 
         <div
           style={{
-            position: "absolute",
-            left: "-150px",
-            bottom: "-250px",
-            width: "500px",
-            height: "500px",
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle,rgba(14,165,233,.22),rgba(14,165,233,0))",
-          }}
-        />
-
-        <div
-          style={{
             position: "relative",
             maxWidth: "1180px",
             margin: "0 auto",
@@ -336,8 +378,6 @@ export default function Home() {
             alignItems: "center",
           }}
         >
-          {/* 왼쪽 */}
-
           <div>
             <div
               style={{
@@ -380,9 +420,9 @@ export default function Home() {
                 color: "#ccdaea",
               }}
             >
-              천장 물샘, 수도요금 증가, 벽면 습기,
+              수도배관 · 욕실 방수 · 천장 물샘 · 옥상방수
               <br />
-              아랫집 누수까지 원인을 확인하고
+              누수 증상과 발생 위치를 확인하고
               <br />
               현장에 필요한 작업을 안내합니다.
             </p>
@@ -405,8 +445,6 @@ export default function Home() {
                   borderRadius: "12px",
                   fontWeight: 950,
                   fontSize: "16px",
-                  boxShadow:
-                    "0 10px 25px rgba(0,0,0,.18)",
                 }}
               >
                 📞 바로 전화하기
@@ -450,7 +488,6 @@ export default function Home() {
               <strong
                 style={{
                   fontSize: "23px",
-                  letterSpacing: "-0.5px",
                 }}
               >
                 {PHONE_DISPLAY}
@@ -458,17 +495,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 오른쪽 전문 카드 */}
-
           <div
             style={{
               background: "rgba(255,255,255,.97)",
               borderRadius: "24px",
               padding: "26px",
               color: "#0f172a",
-              boxShadow:
-                "0 28px 70px rgba(0,0,0,.22)",
-              border: "1px solid rgba(255,255,255,.25)",
+              boxShadow: "0 28px 70px rgba(0,0,0,.22)",
             }}
           >
             <div
@@ -479,29 +512,15 @@ export default function Home() {
                 marginBottom: "22px",
               }}
             >
-              <div
+              <Image
+                src={LOGO}
+                alt="누수대학 로고"
+                width={68}
+                height={68}
                 style={{
-                  width: "68px",
-                  height: "68px",
-                  borderRadius: "18px",
-                  background:
-                    "linear-gradient(135deg,#e9f6ff,#d9efff)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
+                  objectFit: "contain",
                 }}
-              >
-                <Image
-                  src={LOGO}
-                  alt="누수대학 로고"
-                  width={61}
-                  height={61}
-                  style={{
-                    objectFit: "contain",
-                  }}
-                />
-              </div>
+              />
 
               <div>
                 <div
@@ -519,7 +538,6 @@ export default function Home() {
                     marginTop: "3px",
                     fontSize: "23px",
                     fontWeight: 950,
-                    letterSpacing: "-1px",
                   }}
                 >
                   누수대학
@@ -528,8 +546,8 @@ export default function Home() {
             </div>
 
             {[
-              ["01", "누수 원인 점검", "증상과 현장 상태부터 확인"],
-              ["02", "필요 범위 확인", "불필요한 작업 최소화"],
+              ["01", "누수 원인 점검", "배관·방수·외부 유입 가능성 확인"],
+              ["02", "필요 범위 확인", "불필요한 작업을 줄이고 원인 중심 점검"],
               ["03", "현장 맞춤 안내", "누수 유형에 맞는 작업 상담"],
             ].map(([number, title, desc]) => (
               <div
@@ -537,7 +555,6 @@ export default function Home() {
                 style={{
                   display: "flex",
                   gap: "14px",
-                  alignItems: "flex-start",
                   padding: "16px 0",
                   borderTop: "1px solid #edf1f5",
                 }}
@@ -583,97 +600,12 @@ export default function Home() {
                 </div>
               </div>
             ))}
-
-            <div
-              style={{
-                marginTop: "8px",
-                padding: "15px",
-                borderRadius: "13px",
-                background: "#f4f9fe",
-                color: "#36546f",
-                fontSize: "13px",
-                fontWeight: 700,
-                lineHeight: 1.6,
-              }}
-            >
-              서울 · 경기 · 인천 주요 지역 출장
-              <br />
-              현장 위치에 따라 출장 가능 여부 상담
-            </div>
           </div>
         </div>
       </section>
 
       {/* =====================================
-          핵심 정보
-      ===================================== */}
-
-      <section
-        style={{
-          background: "#fff",
-          borderBottom: "1px solid #e8edf3",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1180px",
-            margin: "0 auto",
-            padding: "22px 20px",
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit,minmax(150px,1fr))",
-            gap: "12px",
-          }}
-        >
-          {[
-            ["01", "누수탐지", "원인 위치 확인"],
-            ["02", "배관누수", "배관 상태 점검"],
-            ["03", "욕실누수", "방수·배수 확인"],
-            ["04", "세대간 누수", "아파트 누수 상담"],
-          ].map(([number, title, desc]) => (
-            <div
-              key={number}
-              style={{
-                padding: "16px",
-                borderRight: "1px solid #edf0f4",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 950,
-                  color: "#0b75d9",
-                }}
-              >
-                SPECIALTY {number}
-              </div>
-
-              <div
-                style={{
-                  marginTop: "5px",
-                  fontSize: "17px",
-                  fontWeight: 950,
-                }}
-              >
-                {title}
-              </div>
-
-              <div
-                style={{
-                  marginTop: "3px",
-                  fontSize: "13px",
-                  color: "#7b8796",
-                }}
-              >
-                {desc}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* =====================================
-          SERVICE
+          서비스
       ===================================== */}
 
       <section
@@ -689,7 +621,6 @@ export default function Home() {
         >
           <div
             style={{
-              maxWidth: "700px",
               marginBottom: "36px",
             }}
           >
@@ -698,7 +629,6 @@ export default function Home() {
                 color: "#0874d9",
                 fontSize: "13px",
                 fontWeight: 950,
-                letterSpacing: "1.2px",
               }}
             >
               PROFESSIONAL SERVICE
@@ -709,22 +639,10 @@ export default function Home() {
                 margin: "8px 0 0",
                 fontSize: "clamp(30px,5vw,43px)",
                 letterSpacing: "-2px",
-                lineHeight: 1.25,
               }}
             >
               누수 증상별 전문 서비스
             </h2>
-
-            <p
-              style={{
-                margin: "12px 0 0",
-                color: "#64748b",
-                lineHeight: 1.8,
-              }}
-            >
-              누수 증상에 맞는 항목을 선택하면
-              자세한 내용과 출장 가능 지역을 확인할 수 있습니다.
-            </p>
           </div>
 
           <div
@@ -751,41 +669,21 @@ export default function Home() {
                     border: "1px solid #e4eaf0",
                     borderRadius: "19px",
                     padding: "24px",
-                    boxShadow:
-                      "0 8px 28px rgba(15,23,42,.045)",
                   }}
                 >
                   <div
                     style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "14px",
+                      background: "#edf7ff",
                       display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      gap: "10px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "25px",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        borderRadius: "14px",
-                        background: "#edf7ff",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "25px",
-                      }}
-                    >
-                      {service.icon}
-                    </div>
-
-                    <span
-                      style={{
-                        fontSize: "20px",
-                        color: "#a5b4c4",
-                      }}
-                    >
-                      ↗
-                    </span>
+                    {service.icon}
                   </div>
 
                   <div
@@ -803,7 +701,6 @@ export default function Home() {
                     style={{
                       margin: "5px 0 0",
                       fontSize: "23px",
-                      letterSpacing: "-1px",
                     }}
                   >
                     {service.title}
@@ -827,146 +724,25 @@ export default function Home() {
       </section>
 
       {/* =====================================
-          증상
+          실제 작업사진
       ===================================== */}
 
       <section
         style={{
-          padding: "70px 20px",
-          background: "#0d223a",
-          color: "#fff",
+          padding: "74px 20px",
+          background: "#edf5fb",
         }}
       >
         <div
           style={{
-            maxWidth: "1100px",
-            margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit,minmax(290px,1fr))",
-            gap: "40px",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                color: "#5bb7ff",
-                fontSize: "13px",
-                fontWeight: 950,
-              }}
-            >
-              LEAK CHECK
-            </div>
-
-            <h2
-              style={{
-                margin: "10px 0 0",
-                fontSize: "clamp(30px,5vw,42px)",
-                lineHeight: 1.3,
-                letterSpacing: "-2px",
-              }}
-            >
-              이런 증상이 있다면
-              <br />
-              누수를 확인해보세요.
-            </h2>
-
-            <p
-              style={{
-                margin: "18px 0 0",
-                color: "#aebed0",
-                lineHeight: 1.8,
-              }}
-            >
-              누수는 초기에 원인을 확인하는 것이 중요합니다.
-              <br />
-              작은 물샘도 장기간 방치하면 피해 범위가
-              커질 수 있습니다.
-            </p>
-          </div>
-
-          <div
-            style={{
-              background: "#fff",
-              color: "#142033",
-              borderRadius: "20px",
-              padding: "10px 24px",
-            }}
-          >
-            {[
-              "물을 사용하지 않아도 수도계량기가 움직입니다.",
-              "수도요금이 갑자기 많이 나왔습니다.",
-              "천장이나 벽에 물 얼룩이 생겼습니다.",
-              "벽지 또는 장판에 습기와 곰팡이가 생깁니다.",
-              "욕실 사용 후 아랫집에서 누수 연락이 옵니다.",
-            ].map((text, index) => (
-              <div
-                key={text}
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "12px",
-                  padding: "17px 0",
-                  borderBottom:
-                    index === 4
-                      ? "none"
-                      : "1px solid #edf1f5",
-                }}
-              >
-                <div
-                  style={{
-                    width: "25px",
-                    height: "25px",
-                    borderRadius: "50%",
-                    background: "#e7f4ff",
-                    color: "#0874d9",
-                    fontSize: "12px",
-                    fontWeight: 950,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  ✓
-                </div>
-
-                <div
-                  style={{
-                    fontSize: "14px",
-                    lineHeight: 1.65,
-                    fontWeight: 750,
-                  }}
-                >
-                  {text}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================
-          PROCESS
-      ===================================== */}
-
-      <section
-        style={{
-          padding: "72px 20px",
-          background: "#fff",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1120px",
+            maxWidth: "1180px",
             margin: "0 auto",
           }}
         >
           <div
             style={{
               textAlign: "center",
-              marginBottom: "37px",
+              marginBottom: "36px",
             }}
           >
             <div
@@ -976,87 +752,146 @@ export default function Home() {
                 fontWeight: 950,
               }}
             >
-              PROCESS
+              WORK CASE
             </div>
 
             <h2
               style={{
                 margin: "8px 0 0",
-                fontSize: "36px",
+                fontSize: "clamp(30px,5vw,42px)",
                 letterSpacing: "-2px",
               }}
             >
-              누수대학 작업 진행
+              실제 작업 사례
             </h2>
+
+            <p
+              style={{
+                margin: "12px auto 0",
+                maxWidth: "680px",
+                color: "#64748b",
+                lineHeight: 1.8,
+              }}
+            >
+              누수 유형에 따라 배관, 욕실 방수, 천장 누수,
+              옥상 방수 등 다양한 작업이 진행될 수 있습니다.
+            </p>
           </div>
 
           <div
             style={{
               display: "grid",
               gridTemplateColumns:
-                "repeat(auto-fit,minmax(215px,1fr))",
-              gap: "14px",
+                "repeat(auto-fit,minmax(260px,1fr))",
+              gap: "18px",
             }}
           >
-            {[
-              ["01", "상담 접수", "지역과 현재 증상을 확인합니다."],
-              ["02", "현장 확인", "물샘 흔적과 현장 상태를 확인합니다."],
-              ["03", "원인 점검", "누수 위치와 원인을 확인합니다."],
-              ["04", "작업 안내", "필요한 작업 범위를 안내합니다."],
-            ].map(([number, title, desc]) => (
-              <div
-                key={number}
+            {WORK_PHOTOS.map((item) => (
+              <Link
+                key={`${item.src}-${item.title}`}
+                href={item.href}
                 style={{
-                  padding: "25px",
-                  background: "#f7f9fc",
-                  border: "1px solid #e7ebf0",
-                  borderRadius: "17px",
+                  textDecoration: "none",
+                  color: "inherit",
                 }}
               >
-                <div
+                <article
                   style={{
-                    fontSize: "12px",
-                    color: "#0874d9",
-                    fontWeight: 950,
+                    background: "#fff",
+                    borderRadius: "20px",
+                    overflow: "hidden",
+                    border: "1px solid #dfe7ef",
+                    boxShadow: "0 8px 26px rgba(15,23,42,.05)",
+                    height: "100%",
                   }}
                 >
-                  STEP {number}
-                </div>
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      aspectRatio: "4 / 3",
+                      background: "#e5e7eb",
+                    }}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      style={{
+                        objectFit: "cover",
+                      }}
+                    />
 
-                <div
-                  style={{
-                    marginTop: "10px",
-                    fontSize: "21px",
-                    fontWeight: 950,
-                  }}
-                >
-                  {title}
-                </div>
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "14px",
+                        top: "14px",
+                        background: "rgba(7,27,52,.88)",
+                        color: "#fff",
+                        borderRadius: "999px",
+                        padding: "7px 11px",
+                        fontSize: "11px",
+                        fontWeight: 900,
+                      }}
+                    >
+                      {item.badge}
+                    </div>
+                  </div>
 
-                <div
-                  style={{
-                    marginTop: "8px",
-                    color: "#697586",
-                    fontSize: "14px",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {desc}
-                </div>
-              </div>
+                  <div
+                    style={{
+                      padding: "20px",
+                    }}
+                  >
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontSize: "21px",
+                        letterSpacing: "-0.8px",
+                      }}
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p
+                      style={{
+                        margin: "9px 0 0",
+                        color: "#64748b",
+                        fontSize: "14px",
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {item.description}
+                    </p>
+
+                    <div
+                      style={{
+                        marginTop: "15px",
+                        color: "#0874d9",
+                        fontSize: "13px",
+                        fontWeight: 900,
+                      }}
+                    >
+                      관련 서비스 보기 →
+                    </div>
+                  </div>
+                </article>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
       {/* =====================================
-          REGION
+          지역
       ===================================== */}
 
       <section
         style={{
           padding: "72px 20px",
-          background: "#eef5fb",
+          background: "#fff",
         }}
       >
         <div
@@ -1090,16 +925,6 @@ export default function Home() {
             >
               출장 가능 지역
             </h2>
-
-            <p
-              style={{
-                margin: "10px 0 0",
-                color: "#64748b",
-                lineHeight: 1.7,
-              }}
-            >
-              서울 · 경기 · 인천 주요 지역
-            </p>
           </div>
 
           <div
@@ -1112,46 +937,20 @@ export default function Home() {
               <div
                 key={region.slug}
                 style={{
-                  background: "#fff",
+                  background: "#f8fafc",
                   borderRadius: "20px",
                   padding: "24px",
                   border: "1px solid #dfe7ef",
                 }}
               >
-                <div
+                <h3
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    marginBottom: "17px",
+                    margin: "0 0 17px",
+                    fontSize: "23px",
                   }}
                 >
-                  <div
-                    style={{
-                      width: "38px",
-                      height: "38px",
-                      borderRadius: "10px",
-                      background: "#e9f5ff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#0874d9",
-                      fontWeight: 950,
-                    }}
-                  >
-                    {region.name.substring(0, 1)}
-                  </div>
-
-                  <h3
-                    style={{
-                      margin: 0,
-                      fontSize: "23px",
-                      letterSpacing: "-1px",
-                    }}
-                  >
-                    {region.name}
-                  </h3>
-                </div>
+                  {region.name}
+                </h3>
 
                 <div
                   style={{
@@ -1167,7 +966,7 @@ export default function Home() {
                       style={{
                         textDecoration: "none",
                         color: "#334155",
-                        background: "#f6f8fb",
+                        background: "#fff",
                         border: "1px solid #e2e8f0",
                         padding: "10px 13px",
                         borderRadius: "9px",
@@ -1186,14 +985,13 @@ export default function Home() {
       </section>
 
       {/* =====================================
-          FINAL CTA
+          CTA
       ===================================== */}
 
       <section
         style={{
           padding: "72px 20px",
-          background:
-            "linear-gradient(135deg,#0758aa,#087be0)",
+          background: "linear-gradient(135deg,#0758aa,#087be0)",
           color: "#fff",
           textAlign: "center",
         }}
@@ -1204,27 +1002,14 @@ export default function Home() {
             margin: "0 auto",
           }}
         >
-          <div
-            style={{
-              fontSize: "13px",
-              fontWeight: 900,
-              color: "#cde7ff",
-            }}
-          >
-            누수 상담이 필요하신가요?
-          </div>
-
           <h2
             style={{
-              margin: "10px 0 0",
+              margin: 0,
               fontSize: "clamp(30px,6vw,43px)",
               letterSpacing: "-2px",
-              lineHeight: 1.3,
             }}
           >
-            증상과 지역을 알려주시면
-            <br />
-            빠르게 상담해드립니다.
+            누수 증상과 지역을 알려주세요.
           </h2>
 
           <p
@@ -1234,15 +1019,16 @@ export default function Home() {
               lineHeight: 1.8,
             }}
           >
-            전화 또는 문자로 현재 누수 증상을 알려주세요.
+            전화 또는 문자로 현재 누수 증상을 알려주시면
+            상담해드립니다.
           </p>
 
           <div
             style={{
               display: "flex",
               justifyContent: "center",
-              flexWrap: "wrap",
               gap: "10px",
+              flexWrap: "wrap",
               marginTop: "26px",
             }}
           >
@@ -1327,22 +1113,11 @@ export default function Home() {
           <div>대표자 : {OWNER}</div>
           <div>대표전화 : {PHONE_DISPLAY}</div>
           <div>홈페이지 : nusudaehak.com</div>
-
-          <div
-            style={{
-              marginTop: "18px",
-              paddingTop: "17px",
-              borderTop: "1px solid #182a3e",
-              color: "#607286",
-            }}
-          >
-            © {new Date().getFullYear()} {COMPANY}. All rights reserved.
-          </div>
         </div>
       </footer>
 
       {/* =====================================
-          하단 고정 상담바
+          모바일 하단 고정 상담바
       ===================================== */}
 
       <div
