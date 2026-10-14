@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -314,10 +315,8 @@ const LEAK_GUIDE = [
     number: "01",
     title: "수도배관 누수",
     icon: "🔧",
-
     summary:
       "직수(냉수), 온수, 난방 배관 등 수도배관을 점검합니다.",
-
     description:
       "수도배관은 바닥이나 벽 내부에 설치되는 경우가 많아 외부에서 바로 누수 위치가 보이지 않을 수 있습니다. 물을 사용하지 않아도 계량기가 움직이거나 수도요금이 갑자기 증가한다면 배관 누수 가능성을 확인할 필요가 있습니다.",
   },
@@ -326,10 +325,8 @@ const LEAK_GUIDE = [
     number: "02",
     title: "방수층 누수",
     icon: "💦",
-
     summary:
       "화장실·베란다 등 기존 방수층 손상 여부를 확인합니다.",
-
     description:
       "화장실이나 베란다에서 물을 사용했을 때 아래층으로 물이 새거나 누수 증상이 나타난다면 기존 방수층의 손상 여부도 확인해야 합니다. 배관 문제가 아닌 방수층 문제일 수도 있어 원인을 구분하는 과정이 중요합니다.",
   },
@@ -338,10 +335,8 @@ const LEAK_GUIDE = [
     number: "03",
     title: "창틀 누수",
     icon: "🪟",
-
     summary:
       "비가 올 때 창틀 주변으로 물이 들어오는지 확인합니다.",
-
     description:
       "평소에는 문제가 없지만 비가 올 때 창틀 주변에서만 물이 새는 경우에는 창호 주변 실리콘, 외벽 접합부, 틈새 등을 확인할 필요가 있습니다.",
   },
@@ -350,10 +345,8 @@ const LEAK_GUIDE = [
     number: "04",
     title: "화장실 방수",
     icon: "🚿",
-
     summary:
       "욕실 바닥과 벽체의 기존 방수 상태를 확인합니다.",
-
     description:
       "화장실 방수는 기존 바닥과 벽체 상태, 타일 철거 여부, 배수구 주변 등을 확인한 뒤 필요한 작업 범위를 판단하는 것이 중요합니다.",
   },
@@ -362,10 +355,8 @@ const LEAK_GUIDE = [
     number: "05",
     title: "옥상 방수",
     icon: "🏠",
-
     summary:
       "옥상 우레탄의 균열·들뜸·노후 상태를 확인합니다.",
-
     description:
       "옥상 우레탄 방수는 시간이 지나면서 균열이나 들뜸, 노후가 발생할 수 있습니다. 기존 우레탄 상태를 확인하고 필요한 경우 손상 부위와 바탕면을 정리한 뒤 방수 작업을 검토합니다.",
   },
@@ -374,14 +365,182 @@ const LEAK_GUIDE = [
     number: "06",
     title: "창틀 방수",
     icon: "🏢",
-
     summary:
       "창틀 외부 실리콘의 노후와 벌어짐 여부를 확인합니다.",
-
     description:
       "샤시나 창틀 외부 실리콘이 오래되어 벌어지거나 갈라지면 비가 올 때 물이 유입될 수 있습니다. 기존 실리콘 상태를 확인한 뒤 필요한 경우 노후 실리콘을 제거하고 외부용 실리콘 재시공을 검토합니다.",
   },
 ];
+
+/* =====================================
+   사진 데이터
+===================================== */
+
+const IMAGE_SETS = {
+  rooftopBefore: {
+    src: "/IMG_1548.jpeg",
+    title: "옥상방수 작업 전",
+    description:
+      "기존 옥상 방수층이 노후되고 표면 손상이 보이는 상태입니다.",
+  },
+
+  rooftopAfter: {
+    src: "/IMG_1549.jpeg",
+    title: "옥상방수 작업 후",
+    description:
+      "옥상 방수 작업 후 표면이 깔끔하게 정리된 상태입니다.",
+  },
+
+  bathroomWaterproof: {
+    src: "/IMG_1547.jpeg",
+    title: "욕실 방수작업",
+    description:
+      "욕실 바닥 방수 작업을 진행한 현장 사진입니다.",
+  },
+
+  upstairsLeak: {
+    src: "/IMG_1546.jpeg",
+    title: "윗층 누수 흔적",
+    description:
+      "천장 몰딩 주변으로 누수 흔적이 확인되는 사례입니다.",
+  },
+
+  pipeLeak1: {
+    src: "/IMG_1545.jpeg",
+    title: "수도배관누수 작업 사진 1",
+    description:
+      "바닥을 부분 개방해 수도배관 누수 위치를 확인하는 작업 사진입니다.",
+  },
+
+  pipeLeak2: {
+    src: "/IMG_1544.jpeg",
+    title: "수도배관누수 작업 사진 2",
+    description:
+      "배관 노출 후 누수 지점을 점검하는 현장 사진입니다.",
+  },
+} as const;
+
+const SERVICE_PHOTOS: Record<
+  ServiceKey,
+  {
+    title: string;
+    description: string;
+    items: {
+      src: string;
+      title: string;
+      description: string;
+      badge?: string;
+    }[];
+  }
+> = {
+  "leak-detection": {
+    title: "누수탐지 관련 작업 사진",
+    description:
+      "누수탐지는 배관, 천장, 옥상 등 여러 원인을 함께 확인하는 과정이 중요합니다.",
+    items: [
+      {
+        ...IMAGE_SETS.upstairsLeak,
+        badge: "대표 사례",
+      },
+      {
+        ...IMAGE_SETS.pipeLeak1,
+        badge: "배관 점검",
+      },
+      {
+        ...IMAGE_SETS.rooftopBefore,
+        badge: "옥상 방수 전",
+      },
+      {
+        ...IMAGE_SETS.rooftopAfter,
+        badge: "옥상 방수 후",
+      },
+    ],
+  },
+
+  "pipe-leak": {
+    title: "배관누수 작업 사진",
+    description:
+      "직수·온수·난방 배관 누수는 바닥 내부를 확인하며 원인을 찾는 경우가 많습니다.",
+    items: [
+      {
+        ...IMAGE_SETS.pipeLeak1,
+        badge: "배관누수",
+      },
+      {
+        ...IMAGE_SETS.pipeLeak2,
+        badge: "배관누수",
+      },
+    ],
+  },
+
+  "bathroom-leak": {
+    title: "욕실누수 관련 사진",
+    description:
+      "욕실누수는 방수층 상태와 누수 흔적을 함께 확인하는 것이 중요합니다.",
+    items: [
+      {
+        ...IMAGE_SETS.bathroomWaterproof,
+        badge: "욕실 방수작업",
+      },
+      {
+        ...IMAGE_SETS.upstairsLeak,
+        badge: "누수 흔적",
+      },
+    ],
+  },
+
+  "ceiling-leak": {
+    title: "천장누수 관련 사진",
+    description:
+      "천장누수는 윗층 누수, 옥상 방수 상태 등 다양한 원인을 함께 확인할 수 있습니다.",
+    items: [
+      {
+        ...IMAGE_SETS.upstairsLeak,
+        badge: "천장누수",
+      },
+      {
+        ...IMAGE_SETS.rooftopBefore,
+        badge: "옥상 방수 전",
+      },
+      {
+        ...IMAGE_SETS.rooftopAfter,
+        badge: "옥상 방수 후",
+      },
+    ],
+  },
+
+  "water-leak": {
+    title: "수도누수 작업 사진",
+    description:
+      "수도누수는 바닥이나 벽 내부 배관을 확인하며 누수 위치를 점검합니다.",
+    items: [
+      {
+        ...IMAGE_SETS.pipeLeak1,
+        badge: "수도배관누수",
+      },
+      {
+        ...IMAGE_SETS.pipeLeak2,
+        badge: "수도배관누수",
+      },
+    ],
+  },
+
+  "apartment-leak": {
+    title: "아파트누수 관련 사진",
+    description:
+      "아파트누수는 세대 간 천장 누수와 욕실 방수 문제를 함께 확인하는 경우가 많습니다.",
+    items: [
+      {
+        ...IMAGE_SETS.upstairsLeak,
+        badge: "세대 간 누수",
+      },
+      {
+        ...IMAGE_SETS.bathroomWaterproof,
+        badge: "욕실 방수작업",
+      },
+    ],
+  },
+};
 
 /* =====================================
    Metadata
@@ -407,9 +566,7 @@ export async function generateMetadata({
   }
 
   const serviceData = SERVICES[service as ServiceKey];
-
-  const regionData =
-    REGIONS[region as RegionKey];
+  const regionData = REGIONS[region as RegionKey];
 
   if (!(district in regionData.districts)) {
     return {};
@@ -451,6 +608,14 @@ export async function generateMetadata({
       siteName: COMPANY,
       locale: "ko_KR",
       type: "website",
+      images: [
+        {
+          url: "/IMG_1546.jpeg",
+          width: 1200,
+          height: 900,
+          alt: "누수대학 시공 사례",
+        },
+      ],
     },
   };
 }
@@ -504,6 +669,9 @@ export default async function ServiceRegionPage({
   const canonical =
     `${SITE_URL}/services/${service}/${region}/${district}`;
 
+  const photoSection =
+    SERVICE_PHOTOS[service as ServiceKey];
+
   /* =====================================
      구조화 데이터
   ===================================== */
@@ -544,7 +712,6 @@ export default async function ServiceRegionPage({
         minHeight: "100vh",
         background: "#f6f8fb",
         color: "#0f172a",
-
         fontFamily:
           '"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
       }}
@@ -571,11 +738,9 @@ export default async function ServiceRegionPage({
             maxWidth: "1120px",
             margin: "0 auto",
             padding: "15px 18px",
-
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-
             gap: "12px",
           }}
         >
@@ -584,7 +749,6 @@ export default async function ServiceRegionPage({
             style={{
               color: "#0f172a",
               textDecoration: "none",
-
               fontSize: "23px",
               fontWeight: 950,
             }}
@@ -596,14 +760,10 @@ export default async function ServiceRegionPage({
             href={PHONE_LINK}
             style={{
               textDecoration: "none",
-
               background: "#0874d9",
               color: "#ffffff",
-
               borderRadius: "10px",
-
               padding: "11px 15px",
-
               fontWeight: 900,
               fontSize: "14px",
             }}
@@ -621,11 +781,8 @@ export default async function ServiceRegionPage({
         style={{
           background:
             "linear-gradient(135deg,#071b34 0%,#0b4c8f 55%,#087ee3 100%)",
-
           color: "#ffffff",
-
           padding: "68px 20px",
-
           textAlign: "center",
         }}
       >
@@ -638,20 +795,14 @@ export default async function ServiceRegionPage({
           <div
             style={{
               display: "inline-block",
-
               background:
                 "rgba(255,255,255,.12)",
-
               border:
                 "1px solid rgba(255,255,255,.2)",
-
               borderRadius: "999px",
-
               padding: "8px 14px",
-
               fontSize: "13px",
               fontWeight: 850,
-
               marginBottom: "18px",
             }}
           >
@@ -670,14 +821,10 @@ export default async function ServiceRegionPage({
           <h1
             style={{
               margin: 0,
-
               fontSize:
                 "clamp(38px,8vw,64px)",
-
               lineHeight: 1.15,
-
               fontWeight: 950,
-
               letterSpacing: "-3px",
             }}
           >
@@ -688,14 +835,10 @@ export default async function ServiceRegionPage({
           <p
             style={{
               maxWidth: "720px",
-
               margin:
                 "18px auto 0",
-
               color: "#d7e9f8",
-
               fontSize: "17px",
-
               lineHeight: 1.8,
             }}
           >
@@ -708,13 +851,9 @@ export default async function ServiceRegionPage({
           <div
             style={{
               display: "flex",
-
               justifyContent: "center",
-
               flexWrap: "wrap",
-
               gap: "10px",
-
               marginTop: "27px",
             }}
           >
@@ -722,17 +861,12 @@ export default async function ServiceRegionPage({
               href={PHONE_LINK}
               style={{
                 textDecoration: "none",
-
                 background: "#ffffff",
-
                 color: "#075cab",
-
                 padding:
                   "15px 23px",
-
                 borderRadius:
                   "12px",
-
                 fontWeight: 950,
               }}
             >
@@ -743,17 +877,12 @@ export default async function ServiceRegionPage({
               href={SMS_LINK}
               style={{
                 textDecoration: "none",
-
                 background: "#111827",
-
                 color: "#ffffff",
-
                 padding:
                   "15px 23px",
-
                 borderRadius:
                   "12px",
-
                 fontWeight: 900,
               }}
             >
@@ -770,7 +899,6 @@ export default async function ServiceRegionPage({
       <section
         style={{
           padding: "64px 20px",
-
           background: "#ffffff",
         }}
       >
@@ -783,11 +911,8 @@ export default async function ServiceRegionPage({
           <div
             style={{
               textAlign: "center",
-
               color: "#0874d9",
-
               fontWeight: 950,
-
               fontSize: "13px",
             }}
           >
@@ -797,12 +922,9 @@ export default async function ServiceRegionPage({
           <h2
             style={{
               textAlign: "center",
-
               margin:
                 "8px 0 28px",
-
               fontSize: "33px",
-
               letterSpacing:
                 "-1.7px",
             }}
@@ -814,18 +936,12 @@ export default async function ServiceRegionPage({
           <div
             style={{
               background: "#f8fafc",
-
               border:
                 "1px solid #e4eaf0",
-
               borderRadius: "20px",
-
               padding: "28px",
-
               color: "#334155",
-
               fontSize: "16px",
-
               lineHeight: 1.9,
             }}
           >
@@ -870,13 +986,170 @@ export default async function ServiceRegionPage({
       </section>
 
       {/* =====================================
+          작업 사진
+      ===================================== */}
+
+      <section
+        style={{
+          padding: "68px 20px",
+          background: "#ffffff",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1120px",
+            margin: "0 auto",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              color: "#0874d9",
+              fontSize: "13px",
+              fontWeight: 950,
+            }}
+          >
+            WORK PHOTO
+          </div>
+
+          <h2
+            style={{
+              margin: "8px 0 10px",
+              textAlign: "center",
+              fontSize:
+                "clamp(30px,5vw,39px)",
+              letterSpacing: "-2px",
+            }}
+          >
+            {photoSection.title}
+          </h2>
+
+          <p
+            style={{
+              textAlign: "center",
+              margin:
+                "0 auto 34px",
+              maxWidth: "700px",
+              color: "#64748b",
+              lineHeight: 1.8,
+            }}
+          >
+            {photoSection.description}
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fit,minmax(260px,1fr))",
+              gap: "18px",
+            }}
+          >
+            {photoSection.items.map(
+              (item) => (
+                <article
+                  key={`${item.src}-${item.title}`}
+                  style={{
+                    background:
+                      "#f8fafc",
+                    border:
+                      "1px solid #e2e8f0",
+                    borderRadius:
+                      "20px",
+                    overflow: "hidden",
+                    boxShadow:
+                      "0 8px 24px rgba(15,23,42,.04)",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      aspectRatio: "4 / 3",
+                      background: "#e5e7eb",
+                    }}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      style={{
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "20px",
+                    }}
+                  >
+                    {item.badge && (
+                      <div
+                        style={{
+                          display:
+                            "inline-block",
+                          marginBottom:
+                            "10px",
+                          background:
+                            "#e8f4ff",
+                          color: "#0874d9",
+                          borderRadius:
+                            "999px",
+                          padding:
+                            "6px 10px",
+                          fontSize:
+                            "12px",
+                          fontWeight:
+                            900,
+                        }}
+                      >
+                        {item.badge}
+                      </div>
+                    )}
+
+                    <h3
+                      style={{
+                        margin:
+                          "0 0 8px",
+                        fontSize:
+                          "20px",
+                        letterSpacing:
+                          "-0.8px",
+                      }}
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p
+                      style={{
+                        margin: 0,
+                        color:
+                          "#64748b",
+                        fontSize:
+                          "14px",
+                        lineHeight:
+                          1.75,
+                      }}
+                    >
+                      {item.description}
+                    </p>
+                  </div>
+                </article>
+              )
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================
           누수 원인 / 방수 유형
       ===================================== */}
 
       <section
         style={{
           padding: "68px 20px",
-
           background: "#edf5fb",
         }}
       >
@@ -889,11 +1162,8 @@ export default async function ServiceRegionPage({
           <div
             style={{
               textAlign: "center",
-
               color: "#0874d9",
-
               fontSize: "13px",
-
               fontWeight: 950,
             }}
           >
@@ -904,12 +1174,9 @@ export default async function ServiceRegionPage({
             style={{
               margin:
                 "8px 0 10px",
-
               textAlign: "center",
-
               fontSize:
                 "clamp(30px,5vw,39px)",
-
               letterSpacing:
                 "-2px",
             }}
@@ -920,14 +1187,10 @@ export default async function ServiceRegionPage({
           <p
             style={{
               textAlign: "center",
-
               margin:
                 "0 auto 34px",
-
               maxWidth: "650px",
-
               color: "#64748b",
-
               lineHeight: 1.8,
             }}
           >
@@ -942,10 +1205,8 @@ export default async function ServiceRegionPage({
           <div
             style={{
               display: "grid",
-
               gridTemplateColumns:
                 "repeat(auto-fit,minmax(280px,1fr))",
-
               gap: "16px",
             }}
           >
@@ -956,16 +1217,11 @@ export default async function ServiceRegionPage({
                   style={{
                     background:
                       "#ffffff",
-
                     border:
                       "1px solid #dfe7ef",
-
                     borderRadius:
                       "19px",
-
-                    padding:
-                      "25px",
-
+                    padding: "25px",
                     boxShadow:
                       "0 8px 24px rgba(15,23,42,.04)",
                   }}
@@ -973,36 +1229,26 @@ export default async function ServiceRegionPage({
                   <div
                     style={{
                       display: "flex",
-
                       alignItems:
                         "center",
-
                       justifyContent:
                         "space-between",
-
                       gap: "10px",
                     }}
                   >
                     <div
                       style={{
                         width: "48px",
-
                         height: "48px",
-
                         background:
                           "#e9f5ff",
-
                         borderRadius:
                           "13px",
-
                         display: "flex",
-
                         alignItems:
                           "center",
-
                         justifyContent:
                           "center",
-
                         fontSize:
                           "24px",
                       }}
@@ -1014,10 +1260,8 @@ export default async function ServiceRegionPage({
                       style={{
                         color:
                           "#9cadbe",
-
                         fontSize:
                           "12px",
-
                         fontWeight:
                           900,
                       }}
@@ -1031,10 +1275,8 @@ export default async function ServiceRegionPage({
                     style={{
                       margin:
                         "18px 0 0",
-
                       fontSize:
                         "22px",
-
                       letterSpacing:
                         "-1px",
                     }}
@@ -1044,20 +1286,11 @@ export default async function ServiceRegionPage({
 
                   <div
                     style={{
-                      marginTop:
-                        "7px",
-
-                      color:
-                        "#0874d9",
-
-                      fontSize:
-                        "14px",
-
-                      fontWeight:
-                        850,
-
-                      lineHeight:
-                        1.6,
+                      marginTop: "7px",
+                      color: "#0874d9",
+                      fontSize: "14px",
+                      fontWeight: 850,
+                      lineHeight: 1.6,
                     }}
                   >
                     {item.summary}
@@ -1067,13 +1300,10 @@ export default async function ServiceRegionPage({
                     style={{
                       margin:
                         "13px 0 0",
-
                       color:
                         "#64748b",
-
                       fontSize:
                         "14px",
-
                       lineHeight:
                         1.8,
                     }}
@@ -1096,26 +1326,21 @@ export default async function ServiceRegionPage({
       <section
         style={{
           padding: "64px 20px",
-
           background: "#ffffff",
         }}
       >
         <div
           style={{
             maxWidth: "900px",
-
             margin: "0 auto",
           }}
         >
           <h2
             style={{
               textAlign: "center",
-
               margin:
                 "0 0 28px",
-
               fontSize: "31px",
-
               letterSpacing:
                 "-1.5px",
             }}
@@ -1130,13 +1355,10 @@ export default async function ServiceRegionPage({
           <div
             style={{
               borderRadius: "20px",
-
               border:
                 "1px solid #e2e8f0",
-
               padding:
                 "10px 25px",
-
               background:
                 "#f8fafc",
             }}
@@ -1148,15 +1370,11 @@ export default async function ServiceRegionPage({
                   style={{
                     display:
                       "flex",
-
                     alignItems:
                       "flex-start",
-
                     gap: "12px",
-
                     padding:
                       "16px 0",
-
                     borderBottom:
                       index ===
                       serviceData
@@ -1170,29 +1388,20 @@ export default async function ServiceRegionPage({
                   <div
                     style={{
                       flexShrink: 0,
-
                       width: "25px",
-
                       height: "25px",
-
                       borderRadius:
                         "50%",
-
                       background:
                         "#e6f4ff",
-
                       color:
                         "#0874d9",
-
                       display:
                         "flex",
-
                       alignItems:
                         "center",
-
                       justifyContent:
                         "center",
-
                       fontWeight:
                         950,
                     }}
@@ -1204,7 +1413,6 @@ export default async function ServiceRegionPage({
                     style={{
                       lineHeight:
                         1.7,
-
                       fontWeight:
                         750,
                     }}
@@ -1225,23 +1433,19 @@ export default async function ServiceRegionPage({
       <section
         style={{
           padding: "65px 20px",
-
           background: "#f2f6fa",
         }}
       >
         <div
           style={{
             maxWidth: "1020px",
-
             margin: "0 auto",
           }}
         >
           <h2
             style={{
               textAlign: "center",
-
               fontSize: "31px",
-
               marginBottom: "30px",
             }}
           >
@@ -1252,10 +1456,8 @@ export default async function ServiceRegionPage({
           <div
             style={{
               display: "grid",
-
               gridTemplateColumns:
                 "repeat(auto-fit,minmax(210px,1fr))",
-
               gap: "15px",
             }}
           >
@@ -1294,25 +1496,19 @@ export default async function ServiceRegionPage({
                   style={{
                     background:
                       "#ffffff",
-
                     border:
                       "1px solid #e2e8f0",
-
                     borderRadius:
                       "18px",
-
-                    padding:
-                      "24px",
+                    padding: "24px",
                   }}
                 >
                   <div
                     style={{
                       color:
                         "#0874d9",
-
                       fontSize:
                         "13px",
-
                       fontWeight:
                         950,
                     }}
@@ -1324,7 +1520,6 @@ export default async function ServiceRegionPage({
                     style={{
                       margin:
                         "10px 0 7px",
-
                       fontSize:
                         "20px",
                     }}
@@ -1335,13 +1530,10 @@ export default async function ServiceRegionPage({
                   <p
                     style={{
                       margin: 0,
-
                       color:
                         "#64748b",
-
                       fontSize:
                         "14px",
-
                       lineHeight:
                         1.7,
                     }}
@@ -1362,23 +1554,19 @@ export default async function ServiceRegionPage({
       <section
         style={{
           padding: "60px 20px",
-
           background: "#ffffff",
         }}
       >
         <div
           style={{
             maxWidth: "1000px",
-
             margin: "0 auto",
           }}
         >
           <h2
             style={{
               textAlign: "center",
-
               fontSize: "29px",
-
               marginBottom: "24px",
             }}
           >
@@ -1388,12 +1576,9 @@ export default async function ServiceRegionPage({
           <div
             style={{
               display: "flex",
-
               justifyContent:
                 "center",
-
               flexWrap: "wrap",
-
               gap: "9px",
             }}
           >
@@ -1412,31 +1597,24 @@ export default async function ServiceRegionPage({
                   style={{
                     textDecoration:
                       "none",
-
                     background:
                       serviceSlug ===
                       service
                         ? "#0874d9"
                         : "#f8fafc",
-
                     color:
                       serviceSlug ===
                       service
                         ? "#ffffff"
                         : "#334155",
-
                     border:
                       "1px solid #dce5ed",
-
                     padding:
                       "11px 14px",
-
                     borderRadius:
                       "10px",
-
                     fontSize:
                       "14px",
-
                     fontWeight:
                       850,
                   }}
@@ -1456,23 +1634,19 @@ export default async function ServiceRegionPage({
       <section
         style={{
           padding: "60px 20px",
-
           background: "#f1f6fb",
         }}
       >
         <div
           style={{
             maxWidth: "1000px",
-
             margin: "0 auto",
           }}
         >
           <h2
             style={{
               textAlign: "center",
-
               fontSize: "29px",
-
               marginBottom: "24px",
             }}
           >
@@ -1482,12 +1656,9 @@ export default async function ServiceRegionPage({
           <div
             style={{
               display: "flex",
-
               justifyContent:
                 "center",
-
               flexWrap: "wrap",
-
               gap: "8px",
             }}
           >
@@ -1506,28 +1677,21 @@ export default async function ServiceRegionPage({
                   style={{
                     textDecoration:
                       "none",
-
                     padding:
                       "10px 13px",
-
                     borderRadius:
                       "9px",
-
                     border:
                       "1px solid #dce5ed",
-
                     background:
                       districtSlug ===
                       district
                         ? "#e7f4ff"
                         : "#ffffff",
-
                     color:
                       "#334155",
-
                     fontSize:
                       "13px",
-
                     fontWeight:
                       800,
                   }}
@@ -1547,21 +1711,16 @@ export default async function ServiceRegionPage({
       <section
         style={{
           padding: "65px 20px",
-
           background:
             "linear-gradient(135deg,#0759ad,#087ee3)",
-
           color: "#ffffff",
-
           textAlign: "center",
         }}
       >
         <h2
           style={{
             margin: 0,
-
             fontSize: "34px",
-
             letterSpacing:
               "-1.5px",
           }}
@@ -1574,9 +1733,7 @@ export default async function ServiceRegionPage({
           style={{
             margin:
               "14px 0 0",
-
             color: "#d9ecff",
-
             lineHeight: 1.8,
           }}
         >
@@ -1590,14 +1747,10 @@ export default async function ServiceRegionPage({
         <div
           style={{
             display: "flex",
-
             justifyContent:
               "center",
-
             flexWrap: "wrap",
-
             gap: "10px",
-
             marginTop: "24px",
           }}
         >
@@ -1605,18 +1758,13 @@ export default async function ServiceRegionPage({
             href={PHONE_LINK}
             style={{
               background: "#ffffff",
-
               color: "#075cab",
-
               textDecoration:
                 "none",
-
               padding:
                 "15px 23px",
-
               borderRadius:
                 "12px",
-
               fontWeight: 950,
             }}
           >
@@ -1627,18 +1775,13 @@ export default async function ServiceRegionPage({
             href={SMS_LINK}
             style={{
               background: "#111827",
-
               color: "#ffffff",
-
               textDecoration:
                 "none",
-
               padding:
                 "15px 23px",
-
               borderRadius:
                 "12px",
-
               fontWeight: 900,
             }}
           >
@@ -1654,9 +1797,7 @@ export default async function ServiceRegionPage({
       <footer
         style={{
           background: "#071827",
-
           color: "#91a3b7",
-
           padding:
             "34px 20px 95px",
         }}
@@ -1664,18 +1805,14 @@ export default async function ServiceRegionPage({
         <div
           style={{
             maxWidth: "1000px",
-
             margin: "0 auto",
-
             fontSize: "13px",
-
             lineHeight: 1.9,
           }}
         >
           <strong
             style={{
               color: "#ffffff",
-
               fontSize: "20px",
             }}
           >
@@ -1709,18 +1846,13 @@ export default async function ServiceRegionPage({
       <div
         style={{
           position: "fixed",
-
           left: 0,
           right: 0,
           bottom: 0,
-
           zIndex: 999,
-
           display: "grid",
-
           gridTemplateColumns:
             "1fr 1fr",
-
           boxShadow:
             "0 -5px 20px rgba(0,0,0,.15)",
         }}
@@ -1729,15 +1861,10 @@ export default async function ServiceRegionPage({
           href={PHONE_LINK}
           style={{
             background: "#0874d9",
-
             color: "#ffffff",
-
             textDecoration: "none",
-
             textAlign: "center",
-
             padding: "17px",
-
             fontWeight: 950,
           }}
         >
@@ -1748,15 +1875,10 @@ export default async function ServiceRegionPage({
           href={SMS_LINK}
           style={{
             background: "#111827",
-
             color: "#ffffff",
-
             textDecoration: "none",
-
             textAlign: "center",
-
             padding: "17px",
-
             fontWeight: 950,
           }}
         >
