@@ -1,44 +1,46 @@
-import type { Metadata } from "next";
+
+import type {
+  Metadata,
+  Viewport,
+} from "next";
+
+import type { ReactNode } from "react";
 
 /* =====================================
    누수대학 기본 정보
 ===================================== */
 
-const SITE_URL = "https://www.nusudaehak.com";
+const SITE_URL =
+  "https://www.nusudaehak.com";
 
 const SITE_NAME = "누수대학";
 
+const OWNER = "김수형";
+
+const PHONE = "010-9413-4686";
+
+const FAVICON =
+  "/E4170FD5-E76B-4B48-8FCB-354D44386823.png";
+
 const SITE_TITLE =
-  "누수대학 | 누수탐지·배관누수·욕실누수 전문";
+  "누수대학 | 서울·경기·인천 누수탐지·배관누수·욕실누수";
 
 const SITE_DESCRIPTION =
-  "누수대학은 누수탐지, 배관누수, 욕실누수, 천장누수, 수도누수를 전문으로 상담합니다. 서울·경기·인천 주요 지역 출장.";
+  "서울·경기·인천 누수탐지 전문 누수대학. 배관누수, 욕실누수, 천장누수, 수도누수, 아파트누수 등 누수 원인 점검 및 상담. 대표 김수형, 상담 010-9413-4686.";
 
 /* =====================================
-   메타데이터
+   검색엔진 메타데이터
 ===================================== */
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-
-  /* -------------------------------------
-     제목
-  ------------------------------------- */
 
   title: {
     default: SITE_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
 
-  /* -------------------------------------
-     페이지 설명
-  ------------------------------------- */
-
   description: SITE_DESCRIPTION,
-
-  /* -------------------------------------
-     기본 정보
-  ------------------------------------- */
 
   applicationName: SITE_NAME,
 
@@ -53,36 +55,37 @@ export const metadata: Metadata = {
     },
   ],
 
-  /* -------------------------------------
-     검색 키워드
-  ------------------------------------- */
-
   keywords: [
     "누수대학",
     "누수탐지",
+    "누수탐지업체",
     "누수업체",
     "누수공사",
     "배관누수",
     "욕실누수",
+    "화장실누수",
     "천장누수",
     "수도누수",
     "아파트누수",
-    "서울누수",
-    "경기누수",
-    "인천누수",
+    "서울 누수탐지",
+    "경기 누수탐지",
+    "인천 누수탐지",
   ],
 
-  /* -------------------------------------
+  /* =====================================
      대표 URL
-  ------------------------------------- */
+
+     개별페이지에서는 각 페이지의
+     canonical을 별도로 설정해야 함
+  ===================================== */
 
   alternates: {
-    canonical: SITE_URL,
+    canonical: "/",
   },
 
-  /* -------------------------------------
-     네이버 / 검색엔진
-  ------------------------------------- */
+  /* =====================================
+     검색로봇 설정
+  ===================================== */
 
   robots: {
     index: true,
@@ -91,12 +94,26 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
 
-  /* -------------------------------------
+  /* =====================================
+     네이버 소유확인
+  ===================================== */
+
+  verification: {
+    other: {
+      "naver-site-verification":
+        "0b56d1e507da8bb0469294e9d3938606769f1abd",
+    },
+  },
+
+  /* =====================================
      Open Graph
-  ------------------------------------- */
+  ===================================== */
 
   openGraph: {
     type: "website",
@@ -113,53 +130,153 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: "/E4170FD5-E76B-4B48-8FCB-354D44386823.png",
-        width: 1200,
-        height: 1200,
-        alt: "누수대학 누수탐지 전문",
+        url: FAVICON,
+        alt: "누수대학 로고",
       },
     ],
   },
 
-  /* -------------------------------------
+  /* =====================================
      SNS 공유
-  ------------------------------------- */
+  ===================================== */
 
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
 
     title: SITE_TITLE,
 
     description: SITE_DESCRIPTION,
 
-    images: [
-      "/E4170FD5-E76B-4B48-8FCB-354D44386823.png",
-    ],
+    images: [FAVICON],
   },
 
-  /* -------------------------------------
+  /* =====================================
      파비콘
-  ------------------------------------- */
+  ===================================== */
 
   icons: {
     icon: [
       {
-        url: "/E4170FD5-E76B-4B48-8FCB-354D44386823.png",
+        url: FAVICON,
         type: "image/png",
       },
     ],
 
-    shortcut:
-      "/E4170FD5-E76B-4B48-8FCB-354D44386823.png",
+    shortcut: FAVICON,
 
     apple: [
       {
-        url: "/E4170FD5-E76B-4B48-8FCB-354D44386823.png",
+        url: FAVICON,
         type: "image/png",
       },
     ],
   },
+
+  formatDetection: {
+    telephone: true,
+  },
 };
+
+/* =====================================
+   모바일 화면 설정
+===================================== */
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0874d9",
+};
+
+/* =====================================
+   업체 구조화 데이터
+===================================== */
+
+const businessSchema = {
+  "@context": "https://schema.org",
+
+  "@type": "HomeAndConstructionBusiness",
+
+  "@id": `${SITE_URL}/#business`,
+
+  name: SITE_NAME,
+
+  url: SITE_URL,
+
+  logo: `${SITE_URL}${FAVICON}`,
+
+  image: `${SITE_URL}${FAVICON}`,
+
+  telephone: PHONE,
+
+  description: SITE_DESCRIPTION,
+
+  founder: {
+    "@type": "Person",
+    name: OWNER,
+  },
+
+  areaServed: [
+    {
+      "@type": "AdministrativeArea",
+      name: "서울특별시",
+    },
+    {
+      "@type": "AdministrativeArea",
+      name: "경기도",
+    },
+    {
+      "@type": "AdministrativeArea",
+      name: "인천광역시",
+    },
+  ],
+
+  knowsAbout: [
+    "누수탐지",
+    "배관누수",
+    "욕실누수",
+    "천장누수",
+    "수도누수",
+    "아파트누수",
+  ],
+};
+
+/* =====================================
+   웹사이트 구조화 데이터
+===================================== */
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+
+  "@type": "WebSite",
+
+  "@id": `${SITE_URL}/#website`,
+
+  name: SITE_NAME,
+
+  url: SITE_URL,
+
+  description: SITE_DESCRIPTION,
+
+  inLanguage: "ko-KR",
+
+  publisher: {
+    "@id": `${SITE_URL}/#business`,
+  },
+};
+
+/* =====================================
+   JSON-LD 안전 출력
+===================================== */
+
+function safeJsonLd(
+  data: Record<string, unknown>
+) {
+  return JSON.stringify(data).replace(
+    /</g,
+    "\\u003c"
+  );
+}
 
 /* =====================================
    Root Layout
@@ -168,122 +285,25 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
-  /* =====================================
-     구조화 데이터
-  ===================================== */
-
-  const organizationSchema = {
-    "@context": "https://schema.org",
-
-    "@type": "HomeAndConstructionBusiness",
-
-    name: SITE_NAME,
-
-    url: SITE_URL,
-
-    logo:
-      `${SITE_URL}/E4170FD5-E76B-4B48-8FCB-354D44386823.png`,
-
-    image:
-      `${SITE_URL}/E4170FD5-E76B-4B48-8FCB-354D44386823.png`,
-
-    telephone: "010-3925-6115",
-
-    description: SITE_DESCRIPTION,
-
-    founder: {
-      "@type": "Person",
-      name: "김대식",
-    },
-
-    areaServed: [
-      {
-        "@type": "AdministrativeArea",
-        name: "서울",
-      },
-      {
-        "@type": "AdministrativeArea",
-        name: "경기",
-      },
-      {
-        "@type": "AdministrativeArea",
-        name: "인천",
-      },
-    ],
-
-    knowsAbout: [
-      "누수탐지",
-      "배관누수",
-      "욕실누수",
-      "천장누수",
-      "수도누수",
-      "아파트누수",
-    ],
-  };
-
   return (
     <html lang="ko">
       <head>
-        {/* =====================================
-            네이버 서치어드바이저 소유확인
-        ===================================== */}
-
-        <meta
-          name="naver-site-verification"
-          content="0b56d1e507da8bb0469294e9d3938606769f1abd"
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLd(
+              businessSchema
+            ),
+          }}
         />
-
-        {/* =====================================
-            모바일 / 브라우저
-        ===================================== */}
-
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover"
-        />
-
-        <meta
-          name="theme-color"
-          content="#0874d9"
-        />
-
-        <meta
-          name="format-detection"
-          content="telephone=yes"
-        />
-
-        {/* =====================================
-            파비콘
-        ===================================== */}
-
-        <link
-          rel="icon"
-          type="image/png"
-          href="/E4170FD5-E76B-4B48-8FCB-354D44386823.png"
-        />
-
-        <link
-          rel="shortcut icon"
-          type="image/png"
-          href="/E4170FD5-E76B-4B48-8FCB-354D44386823.png"
-        />
-
-        <link
-          rel="apple-touch-icon"
-          href="/E4170FD5-E76B-4B48-8FCB-354D44386823.png"
-        />
-
-        {/* =====================================
-            구조화 데이터
-        ===================================== */}
 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(
-              organizationSchema
+            __html: safeJsonLd(
+              websiteSchema
             ),
           }}
         />
