@@ -8,11 +8,13 @@ import { notFound } from "next/navigation";
    기본 정보
 ========================================= */
 
-const SITE = "https://www.nusudaehak.com";
+const SITE_URL = "https://www.nusudaehak.com";
 const COMPANY = "누수대학";
 const OWNER = "김수형";
 const PHONE = "01094134686";
-const PHONE_TEXT = "010-9413-4686";
+const PHONE_DISPLAY = "010-9413-4686";
+
+const PHONE_LINK = `tel:${PHONE}`;
 
 const SMS_MESSAGE = `안녕하세요. 누수대학 홈페이지 보고 문의드립니다.
 
@@ -23,79 +25,103 @@ const SMS_MESSAGE = `안녕하세요. 누수대학 홈페이지 보고 문의드
 
 상담 부탁드립니다.`;
 
-const SMS = `sms:${PHONE}?body=${encodeURIComponent(
+const SMS_LINK = `sms:${PHONE}?body=${encodeURIComponent(
   SMS_MESSAGE
 )}`;
 
 /* =========================================
-   서비스별 정보
+   서비스 정보
 ========================================= */
 
-const SERVICES = {
+type FAQ = {
+  q: string;
+  a: string;
+};
+
+type ServiceData = {
+  name: string;
+  headline: string;
+  intro: string;
+  checks: string[];
+  symptoms: string[];
+  faqs: FAQ[];
+  images: string[];
+};
+
+const SERVICES: Record<string, ServiceData> = {
   "leak-detection": {
     name: "누수탐지",
+    headline: "보이는 물자국보다 실제 누수 원인 확인이 중요합니다.",
     intro:
-      "천장·벽·바닥에 나타난 물자국과 실제 누수 원인은 다를 수 있습니다. 물 사용 여부, 계량기 변화, 강우 시점 등을 종합해 점검 방향을 정합니다.",
+      "천장, 벽, 바닥에 나타난 물자국과 실제 누수 원인은 서로 다를 수 있습니다. 수도배관, 욕실 방수층, 옥상, 외벽 등 가능한 유입 경로를 살펴보고 누수 증상에 맞는 점검 방향을 안내합니다.",
     checks: [
       "누수 발생 시점과 지속 여부",
-      "직수·온수·난방 배관 가능성",
-      "욕실·베란다 방수층 상태",
-      "천장·외벽·창틀의 빗물 유입 여부",
+      "수도계량기 움직임",
+      "직수·온수·난방 배관 상태",
+      "욕실과 베란다 방수층",
+      "천장과 벽면의 습기",
+      "옥상·외벽·창틀의 빗물 유입 가능성",
     ],
-    signs: [
-      "원인을 알 수 없는 천장 물자국",
-      "수도요금이 평소보다 증가",
-      "아랫집에서 누수 연락",
-      "비가 올 때만 생기는 습기",
+    symptoms: [
+      "누수 원인을 정확히 찾지 못한 경우",
+      "아랫집에서 누수 연락을 받은 경우",
+      "수도요금이 갑자기 증가한 경우",
+      "천장이나 벽에 물자국이 생긴 경우",
+      "비가 온 뒤에만 누수가 발생하는 경우",
     ],
     faqs: [
       {
-        q: "물자국이 있는 곳이 누수 원인인가요?",
-        a: "반드시 그렇지는 않습니다. 물이 구조물을 따라 이동할 수 있으므로 배관과 방수층 등 가능한 경로를 확인해야 합니다.",
+        q: "물자국이 있는 곳이 실제 누수 위치인가요?",
+        a: "반드시 그렇지는 않습니다. 물은 구조물이나 배관을 따라 이동할 수 있어 유입 경로를 함께 확인해야 합니다.",
       },
       {
-        q: "상담 전에 무엇을 준비하나요?",
-        a: "누수 위치 사진, 처음 발견한 날짜, 물 사용이나 비와의 연관성을 정리하면 도움이 됩니다.",
+        q: "누수탐지 전 무엇을 준비하면 좋나요?",
+        a: "누수 위치 사진, 처음 발견한 시점, 물 사용과의 연관성 등을 알려주시면 상담에 도움이 됩니다.",
       },
       {
-        q: "누수 원인을 바로 확정할 수 있나요?",
-        a: "사진만으로 확정하기 어려운 경우가 많으며 현장 상태에 따라 추가 확인이 필요할 수 있습니다.",
+        q: "사진만으로 누수 원인을 알 수 있나요?",
+        a: "사진은 증상을 파악하는 데 도움이 되지만 원인을 확정하려면 현장 확인이 필요할 수 있습니다.",
       },
     ],
     images: [
       "/IMG_1546.jpeg",
       "/IMG_1545.jpeg",
+      "/IMG_1547.jpeg",
     ],
   },
 
   "pipe-leak": {
     name: "배관누수",
+    headline: "바닥과 벽 내부의 배관누수 가능성을 확인합니다.",
     intro:
-      "바닥이나 벽 내부에 매립된 직수·온수·난방 배관은 겉으로 상태를 확인하기 어렵습니다. 계량기와 주변 습기, 배관 사용 상황을 살펴 원인 범위를 좁힙니다.",
+      "직수, 온수, 난방 배관은 바닥이나 벽 내부에 매립된 경우가 많습니다. 수도계량기 움직임과 주변 습기, 배관 사용 상황을 확인해 누수 원인을 구분하는 것이 중요합니다.",
     checks: [
-      "직수·온수·난방 배관 구분",
+      "직수 배관 상태",
+      "온수 배관 상태",
+      "난방 배관 누수 가능성",
       "수도계량기 움직임",
-      "배관 연결부와 주변 습기",
-      "누수 의심 부위와 보수 범위",
+      "배관 연결부 상태",
+      "바닥과 벽 내부 습기",
     ],
-    signs: [
-      "물을 쓰지 않아도 계량기 움직임",
-      "바닥에서 올라오는 습기",
-      "배관 주변의 지속적인 물자국",
-      "원인 모를 수도요금 증가",
+    symptoms: [
+      "수도를 잠가도 계량기가 움직이는 경우",
+      "바닥에서 물이 올라오는 경우",
+      "벽 내부에서 물소리가 들리는 경우",
+      "수도요금이 증가한 경우",
+      "직수·온수·난방 배관 누수가 의심되는 경우",
     ],
     faqs: [
       {
-        q: "계량기가 움직이면 무조건 배관누수인가요?",
-        a: "수도기기 사용 등 다른 원인도 있으므로 사용 상태를 먼저 확인해야 합니다.",
+        q: "수도계량기가 움직이면 배관누수인가요?",
+        a: "누수 가능성이 있지만 다른 수도기기 사용 여부도 함께 확인해야 합니다.",
       },
       {
-        q: "바닥을 모두 철거해야 하나요?",
-        a: "누수 위치와 구조에 따라 필요한 작업 범위가 달라집니다.",
+        q: "바닥을 전부 철거해야 하나요?",
+        a: "누수 위치와 현장 구조에 따라 필요한 작업 범위가 달라집니다.",
       },
       {
-        q: "온수배관에서도 누수가 생기나요?",
-        a: "네. 직수·온수·난방 배관 모두 누수 가능성이 있습니다.",
+        q: "온수배관에서도 누수가 발생하나요?",
+        a: "네. 직수, 온수, 난방 등 여러 종류의 배관에서 누수가 발생할 수 있습니다.",
       },
     ],
     images: [
@@ -106,32 +132,36 @@ const SERVICES = {
 
   "bathroom-leak": {
     name: "욕실누수",
+    headline: "욕실 사용 후 발생하는 누수 원인을 구분합니다.",
     intro:
-      "욕실누수는 급수배관뿐 아니라 배수구 주변, 바닥 방수층, 벽과 바닥의 접합부에서도 발생할 수 있습니다. 샤워와 배수 시점을 구분해 증상을 확인하는 것이 중요합니다.",
+      "욕실누수는 급수배관, 배수구 주변, 바닥 방수층, 벽과 바닥 접합부 등 다양한 원인으로 발생할 수 있습니다. 샤워나 배수 후 누수가 심해지는지 확인하는 것이 중요합니다.",
     checks: [
-      "샤워 후 아래층 누수 여부",
-      "배수구 주변과 바닥 방수층",
-      "욕실 급수·배수배관",
-      "벽과 바닥의 접합부",
+      "욕실 바닥 방수층",
+      "배수구 주변 상태",
+      "샤워 및 수도배관",
+      "벽과 바닥 접합부",
+      "욕실 사용 후 아래층 누수 여부",
+      "기존 타일 하부 상태",
     ],
-    signs: [
-      "샤워 후 아래층 천장 물방울",
-      "욕실 사용 후 심해지는 누수",
-      "배수구 주변 지속적인 습기",
-      "화장실 아래층 천장 얼룩",
+    symptoms: [
+      "샤워 후 아래층 천장에 물이 생기는 경우",
+      "욕실 사용 후 누수가 심해지는 경우",
+      "배수구 주변에 물이 고이는 경우",
+      "욕실 벽이나 바닥이 계속 젖는 경우",
+      "아랫집 화장실 천장에 물자국이 생긴 경우",
     ],
     faqs: [
       {
-        q: "욕실누수는 방수 문제인가요?",
-        a: "배관이나 배수구 문제일 수도 있으므로 사용 상황과 구조를 함께 확인해야 합니다.",
+        q: "욕실누수는 무조건 방수 문제인가요?",
+        a: "아닙니다. 수도배관이나 배수구 주변 문제일 수도 있으므로 원인을 구분해야 합니다.",
       },
       {
         q: "욕실 전체를 철거해야 하나요?",
-        a: "원인과 현장 상태를 확인한 뒤 필요한 범위를 판단합니다.",
+        a: "현장 상태와 원인에 따라 작업 범위가 달라집니다.",
       },
       {
-        q: "아랫집 천장에만 증상이 보일 수도 있나요?",
-        a: "네. 위층 욕실의 누수가 아래층 천장에서 먼저 발견되기도 합니다.",
+        q: "아랫집 천장에서만 누수가 보일 수 있나요?",
+        a: "네. 위층 욕실에서 발생한 물이 아래층 천장에 먼저 나타날 수 있습니다.",
       },
     ],
     images: [
@@ -142,32 +172,36 @@ const SERVICES = {
 
   "ceiling-leak": {
     name: "천장누수",
+    headline: "천장 물자국의 실제 유입 경로를 확인합니다.",
     intro:
-      "천장 물자국은 위층 욕실·배관, 옥상 방수층, 외벽 등 여러 경로에서 유입된 물로 생길 수 있습니다. 날씨와 위층 물 사용 상황을 함께 확인합니다.",
+      "천장에 물이 보인다고 해서 반드시 바로 위 위치가 원인은 아닙니다. 위층 욕실, 수도배관, 옥상, 외벽 등 다양한 경로에서 유입된 물이 천장에 나타날 수 있습니다.",
     checks: [
-      "천장 얼룩과 마감재 상태",
-      "위층 수도·욕실 사용 시점",
-      "옥상·외벽의 빗물 유입",
-      "배관과 방수층의 누수 가능성",
+      "천장 물 얼룩과 변색 범위",
+      "위층 수도 사용 여부",
+      "욕실 방수층 상태",
+      "배관 누수 가능성",
+      "옥상 방수 상태",
+      "외벽과 창틀의 빗물 유입 여부",
     ],
-    signs: [
-      "천장에 번지는 갈색 얼룩",
-      "천장에서 떨어지는 물방울",
-      "도배지나 천장 마감재 들뜸",
-      "비 온 뒤 생기는 천장 습기",
+    symptoms: [
+      "천장에 갈색 또는 노란색 얼룩이 생긴 경우",
+      "천장에서 물방울이 떨어지는 경우",
+      "도배지나 마감재가 들뜨는 경우",
+      "비가 온 뒤 천장에 물이 생기는 경우",
+      "위층 물 사용 후 누수가 나타나는 경우",
     ],
     faqs: [
       {
-        q: "천장누수는 윗집 책임인가요?",
-        a: "물자국 위치만으로 원인이나 책임을 확정할 수 없습니다. 유입 경로 확인이 먼저입니다.",
+        q: "천장누수는 반드시 윗집이 원인인가요?",
+        a: "반드시 그렇지는 않습니다. 배관, 옥상, 외벽 등 다른 위치에서 물이 유입될 수 있습니다.",
       },
       {
-        q: "비 올 때만 새면 무엇을 확인하나요?",
-        a: "옥상·외벽·창틀 등 외부 방수와 유입 경로를 확인합니다.",
+        q: "비가 올 때만 물이 새면 무엇을 확인하나요?",
+        a: "옥상, 외벽, 창틀 등 외부 방수 상태를 함께 확인합니다.",
       },
       {
-        q: "물방울이 없어도 점검해야 하나요?",
-        a: "얼룩이 커지거나 습기가 반복되면 원인 확인이 필요할 수 있습니다.",
+        q: "천장 얼룩만 있어도 점검해야 하나요?",
+        a: "얼룩이 커지거나 습기가 반복된다면 원인을 확인하는 것이 좋습니다.",
       },
     ],
     images: [
@@ -179,32 +213,36 @@ const SERVICES = {
 
   "water-leak": {
     name: "수도누수",
+    headline: "수도계량기와 급수배관 상태를 확인합니다.",
     intro:
-      "수도누수는 눈에 보이는 물보다 수도요금 증가나 계량기 움직임으로 먼저 발견되는 경우가 있습니다. 급수배관과 수도기기 사용 상태를 구분해 확인합니다.",
+      "수도누수는 눈에 보이지 않는 곳에서 발생할 수 있습니다. 수도요금 증가나 계량기 움직임으로 처음 발견되는 경우가 있어 수도 사용 상태와 배관을 함께 확인해야 합니다.",
     checks: [
-      "모든 수도를 잠근 뒤 계량기 확인",
-      "직수·온수배관 상태",
-      "최근 수도 사용량 변화",
-      "벽·바닥 내부 습기",
+      "수도계량기 움직임",
+      "직수배관 상태",
+      "온수배관 상태",
+      "수도 사용량 변화",
+      "벽과 바닥의 습기",
+      "급수배관 연결부",
     ],
-    signs: [
-      "물을 쓰지 않아도 계량기 회전",
-      "예상보다 높은 수도요금",
-      "벽이나 바닥의 젖은 부분",
-      "급수배관 주변 누수 의심",
+    symptoms: [
+      "물을 사용하지 않아도 계량기가 움직이는 경우",
+      "수도요금이 갑자기 증가한 경우",
+      "수도 압력이 약해진 경우",
+      "벽이나 바닥이 젖는 경우",
+      "급수배관 누수가 의심되는 경우",
     ],
     faqs: [
       {
         q: "수도요금이 많이 나오면 누수인가요?",
-        a: "사용량 증가 등 다른 이유도 있으므로 계량기와 사용 상황을 함께 확인해야 합니다.",
+        a: "사용량 변화 등 다른 이유도 있을 수 있어 계량기와 수도 사용 상태를 확인해야 합니다.",
       },
       {
-        q: "수도누수가 벽 안에서도 발생하나요?",
-        a: "네. 매립된 급수배관에서 발생할 수 있습니다.",
+        q: "수도누수도 벽 내부에서 발생하나요?",
+        a: "네. 매립된 급수배관에서 누수가 발생할 수 있습니다.",
       },
       {
-        q: "계량기 확인만으로 위치를 알 수 있나요?",
-        a: "계량기는 누수 가능성 판단에 도움을 주지만 정확한 위치 확인에는 추가 점검이 필요할 수 있습니다.",
+        q: "계량기만 보고 누수 위치를 알 수 있나요?",
+        a: "계량기는 누수 가능성을 판단하는 데 도움이 되지만 위치 확인에는 추가 점검이 필요할 수 있습니다.",
       },
     ],
     images: [
@@ -215,32 +253,36 @@ const SERVICES = {
 
   "apartment-leak": {
     name: "아파트누수",
+    headline: "아파트 세대 간 누수는 원인 구분이 중요합니다.",
     intro:
-      "아파트 세대 간 누수는 욕실 방수층, 급수·배수배관, 외벽 등 다양한 원인이 있을 수 있습니다. 위층과 아래층에서 나타나는 증상을 함께 비교하는 것이 중요합니다.",
+      "아파트누수는 위층과 아래층 사이에서 발생하는 경우가 많지만 원인은 수도배관, 욕실 방수층, 배수구, 외벽 등 다양할 수 있습니다. 누수가 나타나는 위치와 물 사용 상황을 함께 확인해야 합니다.",
     checks: [
-      "위·아래층 누수 위치 비교",
-      "욕실·주방 물 사용과의 연관성",
-      "배관·방수층 상태",
-      "관리사무소 확인 내용",
+      "위층과 아래층 누수 위치",
+      "욕실 사용과 누수 발생의 연관성",
+      "직수·온수 배관 상태",
+      "욕실과 베란다 방수층",
+      "천장 물자국과 습기",
+      "외벽과 창틀 유입 가능성",
     ],
-    signs: [
-      "아랫집에서 누수 연락",
-      "위층 물 사용 후 천장 얼룩",
-      "욕실·베란다 주변 습기",
-      "세대 간 누수 원인 확인 필요",
+    symptoms: [
+      "아랫집에서 누수 연락을 받은 경우",
+      "윗집 누수가 의심되는 경우",
+      "욕실이나 베란다에 물이 생기는 경우",
+      "천장에 지속적인 물자국이 있는 경우",
+      "세대 간 누수 원인을 확인해야 하는 경우",
     ],
     faqs: [
       {
-        q: "아랫집에 물이 새면 우리 집이 원인인가요?",
-        a: "반드시 그렇지는 않으며 실제 유입 경로를 확인해야 합니다.",
+        q: "아랫집 천장에 물이 생기면 우리 집이 원인인가요?",
+        a: "가능성은 있지만 위치만으로 확정할 수 없습니다. 실제 유입 경로를 확인해야 합니다.",
       },
       {
-        q: "관리사무소에 먼저 문의해도 되나요?",
-        a: "네. 확인한 내용과 사진을 함께 준비하면 상담에 도움이 됩니다.",
+        q: "관리사무소 확인 후 상담해도 되나요?",
+        a: "네. 관리사무소에서 확인한 내용과 사진을 알려주시면 도움이 됩니다.",
       },
       {
         q: "아파트 욕실누수도 배관 문제일 수 있나요?",
-        a: "네. 방수층 외에도 급수·배수배관이 원인일 수 있습니다.",
+        a: "네. 방수층 외에도 급수배관이나 배수구가 원인일 수 있습니다.",
       },
     ],
     images: [
@@ -248,15 +290,18 @@ const SERVICES = {
       "/IMG_1547.jpeg",
     ],
   },
-} as const;
-
-type ServiceKey = keyof typeof SERVICES;
+};
 
 /* =========================================
-   시공 가능 지역
+   지역 정보
 ========================================= */
 
-const REGIONS = {
+type RegionData = {
+  name: string;
+  districts: Record<string, string>;
+};
+
+const REGIONS: Record<string, RegionData> = {
   seoul: {
     name: "서울",
     districts: {
@@ -304,57 +349,86 @@ const REGIONS = {
       namdong: "남동구",
     },
   },
-} as const;
+};
 
-type RegionKey = keyof typeof REGIONS;
+/* =========================================
+   지역별 상담 안내
+========================================= */
 
-type Params = {
+const AREA_TIPS: Record<string, string> = {
+  jongno: "물이 보이는 위치와 처음 발견한 시점을 확인해 주세요.",
+  jung: "수도 사용 여부에 따라 증상이 달라지는지 확인해 주세요.",
+  yongsan: "천장이나 벽의 물자국 크기 변화를 기록해 주세요.",
+  seongdong: "욕실 사용 후 누수가 심해지는지 확인해 주세요.",
+  gwangjin: "비가 오지 않는 날에도 같은 증상이 있는지 확인해 주세요.",
+  dongdaemun: "수도계량기와 최근 수도요금 변화를 확인해 주세요.",
+  seongbuk: "습기나 곰팡이가 반복되는 위치를 사진으로 남겨주세요.",
+  mapo: "물이 계속 새는지 간헐적으로 발생하는지 확인해 주세요.",
+  seodaemun: "수도를 사용하지 않을 때 계량기가 움직이는지 확인해 주세요.",
+  yeongdeungpo: "누수 위치 주변에 욕실이나 배관이 있는지 확인해 주세요.",
+  dongjak: "특정 수도를 사용할 때 증상이 생기는지 확인해 주세요.",
+  gwanak: "천장이나 벽의 변색 범위를 사진으로 남겨주세요.",
+  seocho: "욕실 사용 전후 누수 증상 차이를 확인해 주세요.",
+  gangnam: "위층이나 아래층에서 확인된 누수 위치도 알려주세요.",
+  bucheon: "천장·벽·바닥 중 어느 곳에서 물이 보이는지 확인해 주세요.",
+  siheung: "비 오는 날과 맑은 날 증상이 다른지 확인해 주세요.",
+  ansan: "물자국의 최초 위치와 현재 범위를 비교해 주세요.",
+  anyang: "욕실이나 주방 사용 후 증상이 심해지는지 확인해 주세요.",
+  suwon: "물을 모두 잠근 상태에서 수도계량기를 확인해 주세요.",
+  hwaseong: "누수 부위를 여러 각도에서 촬영해 주세요.",
+  pyeongtaek: "최근 수도요금 증가가 있었는지 확인해 주세요.",
+  uiwang: "물 사용 전후로 증상이 달라지는지 확인해 주세요.",
+  gimpo: "비가 올 때만 발생한다면 그 시점도 알려주세요.",
+  paju: "누수 발생 시간과 날씨를 함께 기록해 주세요.",
+  gwangmyeong: "위층 물 사용 후 증상이 나타나는지 확인해 주세요.",
+  gwacheon: "물자국이 커지고 있다면 현재 상태를 사진으로 남겨주세요.",
+  gyeyang: "욕실 사용과 누수 발생의 연관성을 확인해 주세요.",
+  bupyeong: "모든 수도를 잠근 뒤 계량기 상태를 확인해 주세요.",
+  seo: "비가 온 뒤에만 나타나는 증상인지 확인해 주세요.",
+  namdong: "천장이나 벽의 물자국을 사진으로 남겨주세요.",
+};
+
+/* =========================================
+   타입 및 URL 확인
+========================================= */
+
+type PageParams = {
   service: string;
   region: string;
   district: string;
 };
 
-type Props = {
-  params: Promise<Params>;
+type PageProps = {
+  params: Promise<PageParams>;
 };
 
-/* =========================================
-   URL 유효성 검사
-========================================= */
+function getPageData(params: PageParams) {
+  const service = SERVICES[params.service];
+  const region = REGIONS[params.region];
 
-function resolve(p: Params) {
-  if (
-    !Object.prototype.hasOwnProperty.call(
-      SERVICES,
-      p.service
-    ) ||
-    !Object.prototype.hasOwnProperty.call(
-      REGIONS,
-      p.region
-    )
-  ) {
+  if (!service || !region) {
     return null;
   }
 
-  const service = p.service as ServiceKey;
-  const region = p.region as RegionKey;
+  const districtName =
+    region.districts[params.district];
 
-  const districts = REGIONS[region]
-    .districts as Record<string, string>;
-
-  const district = districts[p.district];
-
-  if (!district) {
+  if (!districtName) {
     return null;
   }
+
+  const areaName =
+    `${region.name} ${districtName}`;
+
+  const url =
+    `${SITE_URL}/services/${params.service}/${params.region}/${params.district}`;
 
   return {
     service,
     region,
-    district,
-    data: SERVICES[service],
-    regionName: REGIONS[region].name,
-    districts,
+    districtName,
+    areaName,
+    url,
   };
 }
 
@@ -364,33 +438,35 @@ function resolve(p: Params) {
 
 export const dynamicParams = false;
 
-export function generateStaticParams(): Params[] {
-  return Object.entries(REGIONS).flatMap(
-    ([region, info]) =>
-      Object.keys(info.districts).flatMap(
-        (district) =>
-          Object.keys(SERVICES).map(
-            (service) => ({
-              service,
-              region,
-              district,
-            })
-          )
-      )
-  );
+export function generateStaticParams(): PageParams[] {
+  const result: PageParams[] = [];
+
+  for (const service of Object.keys(SERVICES)) {
+    for (const [region, data] of Object.entries(REGIONS)) {
+      for (const district of Object.keys(data.districts)) {
+        result.push({
+          service,
+          region,
+          district,
+        });
+      }
+    }
+  }
+
+  return result;
 }
 
 /* =========================================
-   지역별 메타데이터
+   메타데이터
 ========================================= */
 
 export async function generateMetadata({
   params,
-}: Props): Promise<Metadata> {
-  const p = await params;
-  const r = resolve(p);
+}: PageProps): Promise<Metadata> {
+  const values = await params;
+  const data = getPageData(values);
 
-  if (!r) {
+  if (!data) {
     return {
       robots: {
         index: false,
@@ -400,22 +476,19 @@ export async function generateMetadata({
   }
 
   const title =
-    `${r.district} ${r.data.name} | 누수 원인 점검·상담`;
+    `${data.districtName} ${data.service.name} | 원인 점검·상담`;
 
   const description =
-    `${r.regionName} ${r.district} ${r.data.name} 상담. ` +
-    `${r.data.intro} ` +
-    `누수대학 대표 ${OWNER}, ${PHONE_TEXT}.`;
-
-  const url =
-    `${SITE}/services/${p.service}/${p.region}/${p.district}`;
+    `${data.areaName} ${data.service.name} 상담. ` +
+    `${data.service.intro} ` +
+    `누수대학 상담 ${PHONE_DISPLAY}.`;
 
   return {
     title,
     description,
 
     alternates: {
-      canonical: url,
+      canonical: data.url,
     },
 
     robots: {
@@ -426,15 +499,14 @@ export async function generateMetadata({
     openGraph: {
       title: `${title} | ${COMPANY}`,
       description,
-      url,
-      type: "website",
+      url: data.url,
       siteName: COMPANY,
       locale: "ko_KR",
-
+      type: "website",
       images: [
         {
-          url: r.data.images[0],
-          alt: `${r.data.name} 관련 작업 참고 사진`,
+          url: `${SITE_URL}${data.service.images[0]}`,
+          alt: `${data.service.name} 작업 참고 사진`,
         },
       ],
     },
@@ -443,7 +515,9 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${title} | ${COMPANY}`,
       description,
-      images: [r.data.images[0]],
+      images: [
+        `${SITE_URL}${data.service.images[0]}`,
+      ],
     },
   };
 }
@@ -452,176 +526,186 @@ export async function generateMetadata({
    공통 스타일
 ========================================= */
 
-const css = {
-  wrap: {
-    maxWidth: 1080,
-    margin: "0 auto",
-    padding: "0 20px",
-  } as const,
-
-  card: {
-    background: "#ffffff",
-    border: "1px solid #dce5ee",
-    borderRadius: 18,
-    padding: 22,
-  } as const,
-
-  section: {
-    padding: "58px 0",
-  } as const,
-
-  link: {
-    color: "#0b5ca7",
-    textDecoration: "none",
-    fontWeight: 700,
-  } as const,
+const containerStyle = {
+  maxWidth: "1100px",
+  margin: "0 auto",
+  padding: "0 20px",
 };
 
+const cardStyle = {
+  background: "#ffffff",
+  border: "1px solid #e2e8f0",
+  borderRadius: "17px",
+  padding: "22px",
+};
+
+const sectionStyle = {
+  padding: "65px 0",
+};
+
+function safeJsonLd(value: unknown) {
+  return JSON.stringify(value).replace(
+    /</g,
+    "\\u003c"
+  );
+}
+
 /* =========================================
-   지역별 상세페이지
+   페이지
 ========================================= */
 
-export default async function Page({
+export default async function ServiceRegionPage({
   params,
-}: Props) {
-  const p = await params;
-  const r = resolve(p);
+}: PageProps) {
+  const values = await params;
+  const data = getPageData(values);
 
-  if (!r) {
+  if (!data) {
     notFound();
   }
 
-  const url =
-    `${SITE}/services/${p.service}/${p.region}/${p.district}`;
+  const {
+    service,
+    region,
+    districtName,
+    areaName,
+    url,
+  } = data;
 
-  const title = `${r.district} ${r.data.name}`;
+  const title =
+    `${districtName} ${service.name}`;
+
+  const areaTip =
+    AREA_TIPS[values.district] ??
+    "누수 위치와 발생 시점을 사진으로 남겨주세요.";
 
   const otherServices = Object.entries(
     SERVICES
-  ).filter(([key]) => key !== p.service);
+  ).filter(([slug]) => slug !== values.service);
 
   const otherDistricts = Object.entries(
-    r.districts
-  ).filter(([key]) => key !== p.district);
+    region.districts
+  ).filter(([slug]) => slug !== values.district);
 
   /* =====================================
      구조화 데이터
   ===================================== */
 
-  const schemas = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "@id": `${url}#service`,
-      name: title,
-      serviceType: r.data.name,
-      description: r.data.intro,
-      url,
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${url}#service`,
+    name: title,
+    serviceType: service.name,
+    description: service.intro,
+    url,
 
-      areaServed: {
-        "@type": "AdministrativeArea",
-        name: `${r.regionName} ${r.district}`,
-      },
-
-      provider: {
-        "@id": `${SITE}/#business`,
-      },
+    areaServed: {
+      "@type": "AdministrativeArea",
+      name: areaName,
     },
 
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: COMPANY,
-          item: SITE,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: r.data.name,
-          item: `${SITE}/services/${p.service}`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: title,
-          item: url,
-        },
-      ],
+    provider: {
+      "@id": `${SITE_URL}/#business`,
     },
-  ];
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: COMPANY,
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: service.name,
+        item:
+          `${SITE_URL}/services/${values.service}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: title,
+        item: url,
+      },
+    ],
+  };
 
   return (
     <main
       style={{
-        fontFamily:
-          '"Pretendard","Apple SD Gothic Neo",sans-serif',
-        color: "#122238",
-        background: "#f5f8fc",
         minHeight: "100vh",
-        paddingBottom: 70,
+        background: "#f6f8fb",
+        color: "#0f172a",
+        fontFamily:
+          '"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+        paddingBottom: "65px",
       }}
     >
-      {schemas.map((schema, i) => (
-        <script
-          key={i}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(schema).replace(
-              /</g,
-              "\\u003c"
-            ),
-          }}
-        />
-      ))}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(serviceSchema),
+        }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(breadcrumbSchema),
+        }}
+      />
 
       {/* HEADER */}
 
       <header
         style={{
           background: "#ffffff",
-          borderBottom: "1px solid #e5ebf1",
+          borderBottom: "1px solid #e5eaf0",
         }}
       >
         <div
           style={{
-            ...css.wrap,
+            ...containerStyle,
+            paddingTop: "15px",
+            paddingBottom: "15px",
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
-            paddingTop: 16,
-            paddingBottom: 16,
-            gap: 12,
+            justifyContent: "space-between",
+            gap: "12px",
           }}
         >
           <Link
             href="/"
             style={{
-              fontSize: 24,
-              fontWeight: 900,
-              color: "#0b2c4c",
+              color: "#0f172a",
               textDecoration: "none",
+              fontSize: "23px",
+              fontWeight: 900,
             }}
           >
             💧 누수대학
           </Link>
 
           <a
-            href={`tel:${PHONE}`}
+            href={PHONE_LINK}
             style={{
+              textDecoration: "none",
               background: "#0874d9",
               color: "#ffffff",
+              borderRadius: "10px",
               padding: "11px 15px",
-              borderRadius: 10,
-              textDecoration: "none",
-              fontWeight: 800,
+              fontWeight: 900,
+              fontSize: "14px",
             }}
           >
-            전화상담
+            📞 전화상담
           </a>
         </div>
       </header>
@@ -631,24 +715,45 @@ export default async function Page({
       <nav
         aria-label="현재 위치"
         style={{
-          ...css.wrap,
-          paddingTop: 16,
-          paddingBottom: 16,
-          fontSize: 14,
+          background: "#ffffff",
+          borderBottom: "1px solid #edf1f5",
         }}
       >
-        <Link href="/" style={css.link}>
-          홈
-        </Link>
-        {" / "}
-        <Link
-          href={`/services/${p.service}`}
-          style={css.link}
+        <div
+          style={{
+            ...containerStyle,
+            paddingTop: "13px",
+            paddingBottom: "13px",
+            fontSize: "13px",
+            color: "#64748b",
+          }}
         >
-          {r.data.name}
-        </Link>
-        {" / "}
-        {r.district}
+          <Link
+            href="/"
+            style={{
+              color: "#64748b",
+              textDecoration: "none",
+            }}
+          >
+            홈
+          </Link>
+
+          {" / "}
+
+          <Link
+            href={`/services/${values.service}`}
+            style={{
+              color: "#64748b",
+              textDecoration: "none",
+            }}
+          >
+            {service.name}
+          </Link>
+
+          {" / "}
+
+          <strong>{districtName}</strong>
+        </div>
       </nav>
 
       {/* HERO */}
@@ -656,29 +761,34 @@ export default async function Page({
       <section
         style={{
           background:
-            "linear-gradient(135deg,#071b34,#0874d9)",
+            "linear-gradient(135deg,#071b34 0%,#0b4c8f 55%,#087ee3 100%)",
           color: "#ffffff",
           padding: "75px 0",
         }}
       >
-        <div style={css.wrap}>
-          <p
+        <div style={containerStyle}>
+          <div
             style={{
-              color: "#c9e6ff",
+              display: "inline-block",
+              background: "rgba(255,255,255,.12)",
+              border: "1px solid rgba(255,255,255,.2)",
+              borderRadius: "999px",
+              padding: "8px 14px",
+              fontSize: "13px",
               fontWeight: 800,
-              margin: "0 0 14px",
+              marginBottom: "18px",
             }}
           >
-            {r.regionName} {r.district} 누수 상담
-          </p>
+            {areaName} 누수 상담
+          </div>
 
           <h1
             style={{
-              fontSize: "clamp(36px,7vw,58px)",
-              lineHeight: 1.2,
-              letterSpacing: "-2px",
               margin: 0,
+              fontSize: "clamp(36px,8vw,60px)",
+              lineHeight: 1.2,
               fontWeight: 900,
+              letterSpacing: "-2px",
             }}
           >
             {title}
@@ -686,135 +796,316 @@ export default async function Page({
 
           <p
             style={{
-              maxWidth: 750,
-              fontSize: 17,
-              lineHeight: 1.9,
-              color: "#e2efff",
-              marginTop: 22,
+              margin: "20px 0 0",
+              maxWidth: "780px",
+              color: "#d6e8fa",
+              fontSize: "19px",
+              lineHeight: 1.8,
+              fontWeight: 700,
             }}
           >
-            {r.data.intro}
+            {service.headline}
+          </p>
+
+          <p
+            style={{
+              margin: "14px 0 0",
+              maxWidth: "780px",
+              color: "#c4ddf5",
+              fontSize: "15px",
+              lineHeight: 1.9,
+            }}
+          >
+            {service.intro}
           </p>
 
           <div
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: 12,
-              marginTop: 28,
+              gap: "10px",
+              marginTop: "28px",
             }}
           >
             <a
-              href={`tel:${PHONE}`}
+              href={PHONE_LINK}
               style={{
                 background: "#ffffff",
-                color: "#07549a",
-                padding: "15px 23px",
-                borderRadius: 12,
+                color: "#075cab",
                 textDecoration: "none",
+                padding: "15px 22px",
+                borderRadius: "12px",
                 fontWeight: 900,
               }}
             >
-              📞 {PHONE_TEXT}
+              📞 {PHONE_DISPLAY}
             </a>
 
             <a
-              href={SMS}
+              href={SMS_LINK}
               style={{
                 background: "#111827",
                 color: "#ffffff",
-                padding: "15px 23px",
-                borderRadius: 12,
                 textDecoration: "none",
+                padding: "15px 22px",
+                borderRadius: "12px",
                 fontWeight: 900,
               }}
             >
-              💬 문자 문의
+              💬 사진·문자 문의
             </a>
           </div>
         </div>
       </section>
 
-      {/* 지역별 상담 안내 */}
+      {/* 지역 상담 안내 */}
 
       <section
         style={{
-          ...css.section,
+          ...sectionStyle,
           background: "#ffffff",
         }}
       >
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 30 }}>
-            {r.district} {r.data.name} 상담 안내
+        <div style={containerStyle}>
+          <div
+            style={{
+              color: "#0874d9",
+              fontSize: "13px",
+              fontWeight: 900,
+            }}
+          >
+            LOCAL SERVICE GUIDE
+          </div>
+
+          <h2
+            style={{
+              margin: "10px 0 24px",
+              fontSize: "32px",
+              letterSpacing: "-1px",
+            }}
+          >
+            {districtName} {service.name} 상담 안내
           </h2>
 
-          <div style={css.card}>
-            <p
-              style={{
-                fontSize: 16,
-                lineHeight: 1.9,
-                marginTop: 0,
-              }}
-            >
-              {r.regionName} {r.district}에서{" "}
-              {r.data.name} 상담이 필요하다면
-              누수 발생 위치와 처음 발견한 시점을
-              알려주세요.
+          <div
+            style={{
+              ...cardStyle,
+              background: "#f8fafc",
+              lineHeight: 1.9,
+              fontSize: "16px",
+              color: "#334155",
+            }}
+          >
+            <p style={{ marginTop: 0 }}>
+              {areaName}에서 {service.name} 상담이
+              필요하다면 현재 물이 보이는 위치,
+              누수를 처음 발견한 시점, 물 사용과의
+              연관성을 함께 알려주세요.
             </p>
 
-            <p
+            <p>{service.intro}</p>
+
+            <div
               style={{
-                fontSize: 16,
-                lineHeight: 1.9,
-                marginBottom: 0,
+                marginTop: "22px",
+                padding: "16px",
+                background: "#eaf5ff",
+                borderLeft: "4px solid #0874d9",
+                borderRadius: "9px",
+                color: "#134d7d",
+                fontWeight: 700,
               }}
             >
-              {r.data.intro}
-            </p>
+              💡 {districtName} 상담 TIP: {areaTip}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 주요 점검 항목 */}
+      {/* 작업 사진 */}
 
-      <section style={css.section}>
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 30 }}>
-            {r.data.name} 주요 점검 항목
+      <section
+        style={{
+          ...sectionStyle,
+          background: "#eef5fb",
+        }}
+      >
+        <div style={containerStyle}>
+          <div style={{ textAlign: "center" }}>
+            <div
+              style={{
+                color: "#0874d9",
+                fontSize: "13px",
+                fontWeight: 900,
+              }}
+            >
+              WORK CASE
+            </div>
+
+            <h2
+              style={{
+                margin: "10px 0",
+                fontSize: "33px",
+                letterSpacing: "-1px",
+              }}
+            >
+              {service.name} 관련 작업사진
+            </h2>
+
+            <p
+              style={{
+                color: "#64748b",
+                lineHeight: 1.8,
+                marginBottom: "30px",
+              }}
+            >
+              누수대학의 작업 참고 사진입니다.
+              현재 페이지의 {districtName} 지역에서
+              촬영한 사진이라는 의미는 아닙니다.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fit,minmax(260px,1fr))",
+              gap: "17px",
+            }}
+          >
+            {service.images.map((src, index) => (
+              <article
+                key={src}
+                style={{
+                  background: "#ffffff",
+                  border: "1px solid #dfe6ed",
+                  borderRadius: "19px",
+                  overflow: "hidden",
+                  boxShadow:
+                    "0 8px 24px rgba(15,23,42,.05)",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    aspectRatio: "4 / 3",
+                    background: "#e5e7eb",
+                  }}
+                >
+                  <Image
+                    src={src}
+                    alt={`${service.name} 관련 작업 참고 사진 ${index + 1}`}
+                    fill
+                    sizes="(max-width:768px) 100vw, 33vw"
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                <div style={{ padding: "19px" }}>
+                  <div
+                    style={{
+                      color: "#0874d9",
+                      fontSize: "12px",
+                      fontWeight: 900,
+                    }}
+                  >
+                    누수대학 작업 참고
+                  </div>
+
+                  <h3
+                    style={{
+                      margin: "7px 0",
+                      fontSize: "19px",
+                    }}
+                  >
+                    {service.name} 관련 작업
+                  </h3>
+
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "#64748b",
+                      fontSize: "14px",
+                      lineHeight: 1.8,
+                    }}
+                  >
+                    누수 및 방수 관련 현장 작업을
+                    확인할 수 있는 참고 사진입니다.
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 점검 항목 */}
+
+      <section
+        style={{
+          ...sectionStyle,
+          background: "#ffffff",
+        }}
+      >
+        <div style={containerStyle}>
+          <h2
+            style={{
+              textAlign: "center",
+              fontSize: "32px",
+              margin: "0 0 30px",
+            }}
+          >
+            {districtName} {service.name} 주요 점검 항목
           </h2>
 
           <div
             style={{
               display: "grid",
               gridTemplateColumns:
-                "repeat(auto-fit,minmax(240px,1fr))",
-              gap: 14,
+                "repeat(auto-fit,minmax(260px,1fr))",
+              gap: "13px",
             }}
           >
-            {r.data.checks.map((item, index) => (
+            {service.checks.map((item, index) => (
               <article
                 key={item}
-                style={css.card}
+                style={{
+                  ...cardStyle,
+                  background: "#f8fafc",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "13px",
+                }}
               >
-                <span
+                <div
                   style={{
+                    width: "30px",
+                    height: "30px",
+                    flexShrink: 0,
+                    borderRadius: "9px",
+                    background: "#e7f4ff",
                     color: "#0874d9",
-                    fontSize: 13,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     fontWeight: 900,
+                    fontSize: "12px",
                   }}
                 >
-                  CHECK {index + 1}
-                </span>
+                  {index + 1}
+                </div>
 
-                <h3
+                <div
                   style={{
-                    fontSize: 17,
+                    fontSize: "15px",
+                    fontWeight: 750,
                     lineHeight: 1.7,
-                    marginBottom: 0,
                   }}
                 >
                   {item}
-                </h3>
+                </div>
               </article>
             ))}
           </div>
@@ -825,117 +1116,85 @@ export default async function Page({
 
       <section
         style={{
-          ...css.section,
-          background: "#ffffff",
+          ...sectionStyle,
+          background: "#0d223a",
+          color: "#ffffff",
         }}
       >
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 30 }}>
-            {r.district} {r.data.name} 의심 증상
-          </h2>
-
-          <ul
+        <div
+          style={{
+            ...containerStyle,
+            maxWidth: "950px",
+          }}
+        >
+          <h2
             style={{
-              ...css.card,
-              paddingLeft: 42,
-              lineHeight: 2.3,
+              textAlign: "center",
+              fontSize: "32px",
+              margin: "0 0 28px",
             }}
           >
-            {r.data.signs.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* 작업 참고 사진 */}
-
-      <section
-        style={{
-          ...css.section,
-          background: "#eaf3fc",
-        }}
-      >
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 30 }}>
-            {r.data.name} 관련 실제 작업 참고 사진
+            {districtName}에서 이런 증상이 있다면
+            <br />
+            {service.name} 점검을 고려해보세요
           </h2>
-
-          <p
-            style={{
-              color: "#475569",
-              lineHeight: 1.8,
-            }}
-          >
-            아래 사진은 누수대학의 작업 참고
-            사진입니다. 현재 보고 계신{" "}
-            {r.district} 지역에서 촬영한 사례라는
-            의미는 아닙니다.
-          </p>
 
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit,minmax(250px,1fr))",
-              gap: 16,
+              background: "#ffffff",
+              color: "#172033",
+              borderRadius: "20px",
+              padding: "12px 25px",
             }}
           >
-            {r.data.images.map((src, i) => (
-              <figure
-                key={src}
+            {service.symptoms.map((item, index) => (
+              <div
+                key={item}
                 style={{
-                  background: "#ffffff",
-                  borderRadius: 16,
-                  overflow: "hidden",
-                  margin: 0,
-                  border: "1px solid #d9e3ed",
+                  display: "flex",
+                  gap: "13px",
+                  padding: "16px 0",
+                  borderBottom:
+                    index === service.symptoms.length - 1
+                      ? "none"
+                      : "1px solid #edf1f5",
                 }}
               >
-                <div
+                <span
                   style={{
-                    position: "relative",
-                    aspectRatio: "4/3",
+                    color: "#0874d9",
+                    fontWeight: 900,
                   }}
                 >
-                  <Image
-                    src={src}
-                    alt={`${r.data.name} 관련 작업 참고 사진 ${i + 1}`}
-                    fill
-                    sizes="(max-width:768px) 100vw, 33vw"
-                    style={{
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
+                  ✓
+                </span>
 
-                <figcaption
+                <span
                   style={{
-                    padding: 16,
-                    color: "#475569",
-                    fontSize: 14,
+                    fontWeight: 700,
+                    lineHeight: 1.7,
                   }}
                 >
-                  누수대학 {r.data.name} 관련 작업
-                  참고 사진 {i + 1}
-                </figcaption>
-              </figure>
+                  {item}
+                </span>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 상담 절차 */}
+      {/* 상담 과정 */}
 
-      <section
-        style={{
-          ...css.section,
-          background: "#ffffff",
-        }}
-      >
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 30 }}>
-            {r.district} {r.data.name} 상담 절차
+      <section style={sectionStyle}>
+        <div style={containerStyle}>
+          <h2
+            style={{
+              textAlign: "center",
+              fontSize: "32px",
+              margin: "0 0 30px",
+            }}
+          >
+            {districtName} {service.name} 상담 과정
           </h2>
 
           <div
@@ -943,54 +1202,60 @@ export default async function Page({
               display: "grid",
               gridTemplateColumns:
                 "repeat(auto-fit,minmax(220px,1fr))",
-              gap: 14,
+              gap: "14px",
             }}
           >
             {[
               {
                 number: "01",
                 title: "상담 접수",
-                text: "지역과 누수 증상을 알려주세요.",
+                text: `${districtName} 지역과 현재 누수 증상을 확인합니다.`,
               },
               {
                 number: "02",
                 title: "증상 확인",
-                text: "누수 위치와 발생 시점을 확인합니다.",
+                text: "누수 위치, 발생 시점, 물 사용 여부를 확인합니다.",
               },
               {
                 number: "03",
-                title: "점검 방향 안내",
-                text: "배관·방수층 등 가능한 원인을 살펴봅니다.",
+                title: "원인 점검",
+                text: "배관과 방수층 등 가능한 원인을 살펴봅니다.",
               },
               {
                 number: "04",
-                title: "작업 범위 상담",
-                text: "현장 상태에 따른 필요한 작업을 안내합니다.",
+                title: "작업 안내",
+                text: "현장 상태에 맞춰 필요한 작업 범위를 안내합니다.",
               },
             ].map((step) => (
               <article
                 key={step.number}
-                style={css.card}
+                style={cardStyle}
               >
                 <div
                   style={{
                     color: "#0874d9",
+                    fontSize: "12px",
                     fontWeight: 900,
-                    fontSize: 13,
                   }}
                 >
                   STEP {step.number}
                 </div>
 
-                <h3 style={{ fontSize: 19 }}>
+                <h3
+                  style={{
+                    margin: "10px 0",
+                    fontSize: "20px",
+                  }}
+                >
                   {step.title}
                 </h3>
 
                 <p
                   style={{
+                    margin: 0,
                     color: "#64748b",
                     lineHeight: 1.8,
-                    marginBottom: 0,
+                    fontSize: "14px",
                   }}
                 >
                   {step.text}
@@ -1003,43 +1268,72 @@ export default async function Page({
 
       {/* FAQ */}
 
-      <section style={css.section}>
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 30 }}>
-            {r.district} {r.data.name} 자주 묻는 질문
+      <section
+        style={{
+          ...sectionStyle,
+          background: "#ffffff",
+        }}
+      >
+        <div
+          style={{
+            ...containerStyle,
+            maxWidth: "950px",
+          }}
+        >
+          <div
+            style={{
+              color: "#0874d9",
+              fontSize: "13px",
+              fontWeight: 900,
+              textAlign: "center",
+            }}
+          >
+            FAQ
+          </div>
+
+          <h2
+            style={{
+              textAlign: "center",
+              fontSize: "32px",
+              margin: "10px 0 30px",
+            }}
+          >
+            {districtName} {service.name} 자주 묻는 질문
           </h2>
 
           <div
             style={{
               display: "grid",
-              gap: 14,
+              gap: "13px",
             }}
           >
-            {r.data.faq.map(({ q, a }) => (
+            {service.faqs.map((faq) => (
               <article
-                key={q}
+                key={faq.q}
                 style={{
-                  ...css.card,
-                  background: "#ffffff",
+                  ...cardStyle,
+                  background: "#f8fafc",
                 }}
               >
                 <h3
                   style={{
-                    fontSize: 18,
-                    marginTop: 0,
+                    margin: 0,
+                    fontSize: "17px",
+                    lineHeight: 1.7,
                   }}
                 >
-                  Q. {q}
+                  Q. {faq.q}
                 </h3>
 
                 <p
                   style={{
-                    lineHeight: 1.85,
-                    marginBottom: 0,
-                    color: "#475569",
+                    margin: "11px 0 0",
+                    color: "#64748b",
+                    fontSize: "14px",
+                    lineHeight: 1.9,
                   }}
                 >
-                  A. {a}
+                  A. {faq.a}
                 </p>
               </article>
             ))}
@@ -1051,66 +1345,94 @@ export default async function Page({
 
       <section
         style={{
-          ...css.section,
-          background: "#ffffff",
+          ...sectionStyle,
+          background: "#eef5fb",
         }}
       >
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 28 }}>
-            {r.district} 다른 누수 서비스
+        <div style={containerStyle}>
+          <h2
+            style={{
+              textAlign: "center",
+              fontSize: "28px",
+              margin: "0 0 24px",
+            }}
+          >
+            {districtName} 다른 누수 서비스
           </h2>
 
           <div
             style={{
               display: "flex",
+              justifyContent: "center",
               flexWrap: "wrap",
-              gap: 10,
+              gap: "10px",
             }}
           >
             {otherServices.map(([slug, item]) => (
               <Link
                 key={slug}
-                href={`/services/${slug}/${p.region}/${p.district}`}
+                href={`/services/${slug}/${values.region}/${values.district}`}
                 style={{
-                  ...css.link,
-                  ...css.card,
+                  textDecoration: "none",
+                  background: "#ffffff",
+                  color: "#334155",
+                  border: "1px solid #d9e2ea",
+                  borderRadius: "10px",
                   padding: "12px 15px",
+                  fontSize: "14px",
+                  fontWeight: 800,
                 }}
               >
-                {r.district} {item.name}
+                {districtName} {item.name}
               </Link>
             ))}
           </div>
+        </div>
+      </section>
 
+      {/* 같은 서비스 다른 지역 */}
+
+      <section
+        style={{
+          ...sectionStyle,
+          background: "#ffffff",
+        }}
+      >
+        <div style={containerStyle}>
           <h2
             style={{
-              fontSize: 28,
-              marginTop: 42,
+              textAlign: "center",
+              fontSize: "28px",
+              margin: "0 0 24px",
             }}
           >
-            {r.regionName} 다른 지역{" "}
-            {r.data.name}
+            {region.name} 다른 지역 {service.name}
           </h2>
 
           <div
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: 10,
+              justifyContent: "center",
+              gap: "9px",
             }}
           >
             {otherDistricts.map(([slug, name]) => (
               <Link
                 key={slug}
-                href={`/services/${p.service}/${p.region}/${slug}`}
+                href={`/services/${values.service}/${values.region}/${slug}`}
                 style={{
-                  ...css.link,
-                  ...css.card,
-                  padding: "10px 13px",
-                  fontSize: 14,
+                  textDecoration: "none",
+                  background: "#f8fafc",
+                  color: "#334155",
+                  border: "1px solid #e0e7ee",
+                  borderRadius: "9px",
+                  padding: "11px 14px",
+                  fontSize: "14px",
+                  fontWeight: 800,
                 }}
               >
-                {name} {r.data.name}
+                {name} {service.name}
               </Link>
             ))}
           </div>
@@ -1121,54 +1443,81 @@ export default async function Page({
 
       <section
         style={{
-          background: "#0866bb",
+          padding: "70px 20px",
+          background:
+            "linear-gradient(135deg,#0759ad,#087ee3)",
           color: "#ffffff",
-          padding: "55px 0",
           textAlign: "center",
         }}
       >
-        <div style={css.wrap}>
-          <h2 style={{ fontSize: 32 }}>
-            {r.district} {r.data.name} 상담
+        <div
+          style={{
+            maxWidth: "760px",
+            margin: "0 auto",
+          }}
+        >
+          <div
+            style={{
+              color: "#cfe8ff",
+              fontSize: "13px",
+              fontWeight: 800,
+            }}
+          >
+            {areaName} 누수 상담
+          </div>
+
+          <h2
+            style={{
+              margin: "10px 0",
+              fontSize: "34px",
+            }}
+          >
+            {title} 문의
           </h2>
 
-          <p style={{ lineHeight: 1.8 }}>
-            누수 위치와 발생 시점을 알려주시면
-            상담에 도움이 됩니다.
+          <p
+            style={{
+              lineHeight: 1.9,
+              color: "#d9ecff",
+            }}
+          >
+            현재 누수 위치와 증상, 발생 시점을
+            알려주세요.
+            <br />
+            사진이 있다면 문자로 보내주셔도 됩니다.
           </p>
 
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
               flexWrap: "wrap",
-              gap: 12,
+              justifyContent: "center",
+              gap: "11px",
+              marginTop: "25px",
             }}
           >
             <a
-              href={`tel:${PHONE}`}
+              href={PHONE_LINK}
               style={{
-                display: "inline-block",
-                padding: "14px 24px",
-                borderRadius: 12,
                 background: "#ffffff",
-                color: "#07549a",
+                color: "#075cab",
                 textDecoration: "none",
+                borderRadius: "12px",
+                padding: "15px 23px",
                 fontWeight: 900,
               }}
             >
-              📞 {PHONE_TEXT}
+              📞 {PHONE_DISPLAY}
             </a>
 
             <a
-              href={SMS}
+              href={SMS_LINK}
               style={{
-                display: "inline-block",
-                padding: "14px 24px",
-                borderRadius: 12,
                 background: "#111827",
                 color: "#ffffff",
                 textDecoration: "none",
+                borderRadius: "12px",
+                padding: "15px 23px",
                 fontWeight: 900,
               }}
             >
@@ -1183,72 +1532,77 @@ export default async function Page({
       <footer
         style={{
           background: "#071827",
-          color: "#cbd5e1",
-          padding: "30px 20px 45px",
-          lineHeight: 1.9,
+          color: "#91a3b7",
+          padding: "36px 20px 45px",
         }}
       >
         <div
           style={{
-            maxWidth: 1080,
+            maxWidth: "1000px",
             margin: "0 auto",
+            fontSize: "13px",
+            lineHeight: 1.9,
           }}
         >
           <strong
             style={{
               color: "#ffffff",
-              fontSize: 20,
+              fontSize: "20px",
             }}
           >
             {COMPANY}
           </strong>
 
-          <div>대표자: {OWNER}</div>
-          <div>대표전화: {PHONE_TEXT}</div>
+          <div style={{ marginTop: "10px" }}>
+            대표자: {OWNER}
+          </div>
+
+          <div>대표전화: {PHONE_DISPLAY}</div>
+
           <div>홈페이지: www.nusudaehak.com</div>
         </div>
       </footer>
 
-      {/* 하단 고정 상담 버튼 */}
+      {/* 모바일 하단 상담 */}
 
       <div
         style={{
           position: "fixed",
-          bottom: 0,
           left: 0,
           right: 0,
+          bottom: 0,
+          zIndex: 999,
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          zIndex: 50,
-          boxShadow: "0 -4px 16px #0002",
+          boxShadow: "0 -5px 20px rgba(0,0,0,.15)",
         }}
       >
         <a
-          href={`tel:${PHONE}`}
+          href={PHONE_LINK}
           style={{
             background: "#0874d9",
             color: "#ffffff",
-            textAlign: "center",
-            padding: 16,
             textDecoration: "none",
+            textAlign: "center",
+            padding: "17px",
             fontWeight: 900,
           }}
         >
-          📞 전화상담
+          📞 전화 상담
         </a>
 
         <a
-          href={SMS}
+          href={SMS_LINK}
           style={{
             background: "#111827",
             color: "#ffffff",
-            textAlign: "center",
-            padding: 16,
             textDecoration: "none",
+            textAlign: "center",
+            padding: "17px",
             fontWeight: 900,
           }}
         >
-          💬 문자상담
+          💬 문자 상담
         </a>
       </div>
     </main>
