@@ -1,18 +1,19 @@
-"use client";
 
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 /* =====================================
-   기본 정보
+   누수대학 기본 정보
 ===================================== */
 
+const SITE_URL = "https://www.nusudaehak.com";
+
 const COMPANY = "누수대학";
-const OWNER = "김대식";
+const OWNER = "김수형";
 
-const PHONE = "01039256115";
-const PHONE_DISPLAY = "010-3925-6115";
-
+const PHONE = "01094134686";
+const PHONE_DISPLAY = "010-9413-4686";
 const PHONE_LINK = `tel:${PHONE}`;
 
 const LOGO =
@@ -32,19 +33,68 @@ const SMS_LINK = `sms:${PHONE}?body=${encodeURIComponent(
 )}`;
 
 /* =====================================
-   서비스
+   메인 SEO
+===================================== */
+
+const META_TITLE =
+  "누수대학 | 누수탐지·배관누수·욕실누수·천장누수 전문";
+
+const META_DESCRIPTION =
+  "서울·경기·인천 누수탐지 및 누수 상담 전문 누수대학. " +
+  "배관누수, 욕실누수, 천장누수, 수도누수, 아파트누수 원인 점검 및 작업 상담. " +
+  `대표전화 ${PHONE_DISPLAY}.`;
+
+export const metadata: Metadata = {
+  title: {
+    absolute: META_TITLE,
+  },
+
+  description: META_DESCRIPTION,
+
+  alternates: {
+    canonical: SITE_URL,
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+
+  openGraph: {
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    url: SITE_URL,
+    siteName: COMPANY,
+    locale: "ko_KR",
+    type: "website",
+    images: [
+      {
+        url: `${SITE_URL}${LOGO}`,
+        alt: "누수대학 로고",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary",
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+  },
+};
+
+/* =====================================
+   서비스 데이터
 ===================================== */
 
 const SERVICES = [
   {
     slug: "leak-detection",
     title: "누수탐지",
-    subtitle: "정확한 원인 확인",
+    subtitle: "누수 원인 확인",
     icon: "🔎",
     description:
       "배관, 방수층, 창틀, 옥상 등 다양한 가능성을 확인해 누수 원인을 점검합니다.",
   },
-
   {
     slug: "pipe-leak",
     title: "배관누수",
@@ -53,7 +103,6 @@ const SERVICES = [
     description:
       "직수·온수·난방 배관 등 바닥이나 벽 내부 배관의 누수 가능성을 확인합니다.",
   },
-
   {
     slug: "bathroom-leak",
     title: "욕실누수",
@@ -62,7 +111,6 @@ const SERVICES = [
     description:
       "욕실 바닥, 배수구, 배관, 방수층 등 다양한 욕실 누수 원인을 확인합니다.",
   },
-
   {
     slug: "ceiling-leak",
     title: "천장누수",
@@ -71,7 +119,6 @@ const SERVICES = [
     description:
       "천장 얼룩과 물 떨어짐의 원인이 배관·방수·외부 유입인지 확인합니다.",
   },
-
   {
     slug: "water-leak",
     title: "수도누수",
@@ -80,7 +127,6 @@ const SERVICES = [
     description:
       "수도요금 증가, 계량기 회전, 수도 압력 변화 등 수도누수 의심 증상을 확인합니다.",
   },
-
   {
     slug: "apartment-leak",
     title: "아파트누수",
@@ -89,86 +135,77 @@ const SERVICES = [
     description:
       "아파트 세대 간 누수와 욕실·배관·방수층 문제를 종합적으로 확인합니다.",
   },
-];
+] as const;
 
 /* =====================================
-   대표 작업 사진
+   실제 작업사진
 ===================================== */
 
-const WORK_PHOTOS = [
+type BeforeAfterPhoto = {
+  type: "beforeAfter";
+  href: string;
+  title: string;
+  description: string;
+  before: string;
+  after: string;
+};
+
+type SinglePhoto = {
+  type: "single";
+  href: string;
+  title: string;
+  description: string;
+  src: string;
+  badge: string;
+};
+
+type WorkPhoto = BeforeAfterPhoto | SinglePhoto;
+
+const WORK_PHOTOS: WorkPhoto[] = [
   {
-    type: "beforeAfter" as const,
-
+    type: "beforeAfter",
     href: "/services/ceiling-leak",
-
     title: "옥상방수 전·후",
-
     description:
-      "노후된 기존 옥상 방수층을 정리하고 방수 작업을 진행한 전·후 비교 사진입니다.",
-
+      "기존 옥상 방수층 정리와 방수 작업 전·후 비교 사진입니다.",
     before: "/IMG_1548.jpeg",
-
     after: "/IMG_1549.jpeg",
   },
-
   {
-    type: "single" as const,
-
+    type: "single",
     href: "/services/bathroom-leak",
-
     src: "/IMG_1547.jpeg",
-
     title: "욕실 방수작업",
-
     badge: "욕실 방수",
-
     description:
-      "욕실 바닥 방수 작업을 진행한 실제 현장 사진입니다.",
+      "욕실 바닥 방수 작업을 진행한 현장 사진입니다.",
   },
-
   {
-    type: "single" as const,
-
+    type: "single",
     href: "/services/ceiling-leak",
-
     src: "/IMG_1546.jpeg",
-
-    title: "윗층 누수 흔적",
-
+    title: "위층 누수 흔적",
     badge: "천장 누수",
-
     description:
-      "천장 몰딩 주변으로 누수 흔적이 확인되는 실제 사례입니다.",
+      "천장 몰딩 주변으로 누수 흔적이 확인되는 사례입니다.",
   },
-
   {
-    type: "single" as const,
-
+    type: "single",
     href: "/services/pipe-leak",
-
     src: "/IMG_1545.jpeg",
-
     title: "수도배관누수 작업",
-
     badge: "배관누수",
-
     description:
       "바닥을 부분 개방해 수도배관 누수 위치를 확인하는 작업입니다.",
   },
-
   {
-    type: "single" as const,
-
+    type: "single",
     href: "/services/water-leak",
-
     src: "/IMG_1544.jpeg",
-
     title: "수도배관 누수 점검",
-
     badge: "수도누수",
-
     description:
-      "배관을 노출한 뒤 누수 지점을 점검하는 실제 현장 사진입니다.",
+      "배관을 노출한 뒤 누수 의심 지점을 점검하는 현장 사진입니다.",
   },
 ];
 
@@ -179,9 +216,7 @@ const WORK_PHOTOS = [
 const REGIONS = [
   {
     name: "서울",
-
     slug: "seoul",
-
     districts: [
       { name: "종로구", slug: "jongno" },
       { name: "중구", slug: "jung" },
@@ -199,12 +234,9 @@ const REGIONS = [
       { name: "강남구", slug: "gangnam" },
     ],
   },
-
   {
     name: "경기",
-
     slug: "gyeonggi",
-
     districts: [
       { name: "부천시", slug: "bucheon" },
       { name: "시흥시", slug: "siheung" },
@@ -220,12 +252,9 @@ const REGIONS = [
       { name: "과천시", slug: "gwacheon" },
     ],
   },
-
   {
     name: "인천",
-
     slug: "incheon",
-
     districts: [
       { name: "계양구", slug: "gyeyang" },
       { name: "부평구", slug: "bupyeong" },
@@ -233,10 +262,97 @@ const REGIONS = [
       { name: "남동구", slug: "namdong" },
     ],
   },
+] as const;
+
+/* =====================================
+   FAQ 데이터
+===================================== */
+
+const FAQS = [
+  {
+    question: "누수탐지는 어떤 경우에 필요한가요?",
+    answer:
+      "천장이나 벽에 물자국이 생기거나 수도요금이 증가하는 경우, 아랫집에서 누수 연락을 받은 경우 등에 누수 원인 점검이 필요할 수 있습니다.",
+  },
+  {
+    question: "누수 위치와 실제 원인은 항상 같은가요?",
+    answer:
+      "항상 같지는 않습니다. 물이 배관이나 구조물을 따라 이동할 수 있어 실제 유입 경로를 확인하는 과정이 중요합니다.",
+  },
+  {
+    question: "욕실누수는 무조건 방수공사를 해야 하나요?",
+    answer:
+      "아닙니다. 배관이나 배수구 주변 문제일 수도 있으므로 원인을 먼저 확인한 뒤 필요한 작업을 결정해야 합니다.",
+  },
+  {
+    question: "누수 상담 전에 무엇을 준비하면 되나요?",
+    answer:
+      "지역, 건물 유형, 누수 증상, 최초 발견 시점, 누수 부위 사진 등을 준비하면 상담에 도움이 됩니다.",
+  },
 ];
 
 /* =====================================
-   메인
+   구조화 데이터
+===================================== */
+
+function safeJsonLd(value: unknown) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
+
+const BUSINESS_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "@id": `${SITE_URL}/#business`,
+  name: COMPANY,
+  url: SITE_URL,
+  image: `${SITE_URL}${LOGO}`,
+  logo: `${SITE_URL}${LOGO}`,
+  telephone: PHONE_DISPLAY,
+  description: META_DESCRIPTION,
+  areaServed: [
+    {
+      "@type": "AdministrativeArea",
+      name: "서울특별시",
+    },
+    {
+      "@type": "AdministrativeArea",
+      name: "경기도",
+    },
+    {
+      "@type": "AdministrativeArea",
+      name: "인천광역시",
+    },
+  ],
+};
+
+const WEBSITE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  name: COMPANY,
+  url: SITE_URL,
+  description: META_DESCRIPTION,
+  inLanguage: "ko-KR",
+};
+
+const WEBPAGE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${SITE_URL}/#webpage`,
+  url: SITE_URL,
+  name: META_TITLE,
+  description: META_DESCRIPTION,
+  inLanguage: "ko-KR",
+  isPartOf: {
+    "@id": `${SITE_URL}/#website`,
+  },
+  about: {
+    "@id": `${SITE_URL}/#business`,
+  },
+};
+
+/* =====================================
+   메인페이지
 ===================================== */
 
 export default function Home() {
@@ -244,50 +360,47 @@ export default function Home() {
     <main
       style={{
         minHeight: "100vh",
-
         background: "#f5f8fc",
-
         color: "#0f172a",
-
         fontFamily:
           '"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+        paddingBottom: "65px",
       }}
     >
-      {/* =====================================
-          HEADER
-      ===================================== */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(WEBPAGE_SCHEMA),
+        }}
+      />
+
+      {/*
+        BUSINESS_SCHEMA 및 WEBSITE_SCHEMA는
+        app/layout.tsx에서 이미 출력하는 경우
+        중복을 피하기 위해 메인에서는 출력하지 않습니다.
+      */}
+
+      {/* HEADER */}
 
       <header
         style={{
           position: "sticky",
-
           top: 0,
-
           zIndex: 100,
-
           background: "rgba(255,255,255,0.97)",
-
           borderBottom: "1px solid #e8edf3",
-
           backdropFilter: "blur(12px)",
         }}
       >
         <div
           style={{
             maxWidth: "1180px",
-
             margin: "0 auto",
-
             minHeight: "72px",
-
             padding: "0 18px",
-
             display: "flex",
-
             alignItems: "center",
-
             justifyContent: "space-between",
-
             gap: "14px",
           }}
         >
@@ -295,40 +408,30 @@ export default function Home() {
             href="/"
             style={{
               display: "flex",
-
               alignItems: "center",
-
               gap: "10px",
-
               textDecoration: "none",
-
               color: "#0d1f35",
             }}
           >
             <div
               style={{
                 width: "45px",
-
                 height: "45px",
-
                 borderRadius: "12px",
-
                 overflow: "hidden",
-
                 background: "#eef6ff",
-
                 display: "flex",
-
                 alignItems: "center",
-
                 justifyContent: "center",
               }}
             >
               <Image
                 src={LOGO}
-                alt="누수대학"
+                alt="누수대학 로고"
                 width={45}
                 height={45}
+                priority
                 style={{
                   width: "45px",
                   height: "45px",
@@ -341,11 +444,8 @@ export default function Home() {
               <div
                 style={{
                   fontSize: "22px",
-
                   fontWeight: 950,
-
                   letterSpacing: "-1px",
-
                   lineHeight: 1.1,
                 }}
               >
@@ -355,13 +455,9 @@ export default function Home() {
               <div
                 style={{
                   marginTop: "3px",
-
                   fontSize: "10px",
-
                   fontWeight: 700,
-
                   color: "#718096",
-
                   letterSpacing: "0.4px",
                 }}
               >
@@ -373,7 +469,6 @@ export default function Home() {
           <div
             style={{
               display: "flex",
-
               gap: "8px",
             }}
           >
@@ -381,17 +476,11 @@ export default function Home() {
               href={SMS_LINK}
               style={{
                 textDecoration: "none",
-
                 padding: "11px 15px",
-
                 borderRadius: "10px",
-
                 background: "#f1f5f9",
-
                 color: "#172033",
-
                 fontSize: "14px",
-
                 fontWeight: 900,
               }}
             >
@@ -402,17 +491,11 @@ export default function Home() {
               href={PHONE_LINK}
               style={{
                 textDecoration: "none",
-
                 padding: "11px 15px",
-
                 borderRadius: "10px",
-
                 background: "#0969d8",
-
                 color: "#fff",
-
                 fontSize: "14px",
-
                 fontWeight: 900,
               }}
             >
@@ -422,36 +505,26 @@ export default function Home() {
         </div>
       </header>
 
-      {/* =====================================
-          HERO
-      ===================================== */}
+      {/* HERO */}
 
       <section
         style={{
           position: "relative",
-
           overflow: "hidden",
-
           background:
             "linear-gradient(135deg,#071b34 0%,#0b3f78 52%,#087be2 100%)",
-
           color: "#fff",
         }}
       >
         <div
+          aria-hidden="true"
           style={{
             position: "absolute",
-
             top: "-130px",
-
             right: "-100px",
-
             width: "430px",
-
             height: "430px",
-
             borderRadius: "50%",
-
             background:
               "radial-gradient(circle,rgba(69,181,255,.35),rgba(69,181,255,0))",
           }}
@@ -460,20 +533,13 @@ export default function Home() {
         <div
           style={{
             position: "relative",
-
             maxWidth: "1180px",
-
             margin: "0 auto",
-
             padding: "64px 20px 68px",
-
             display: "grid",
-
             gridTemplateColumns:
-              "repeat(auto-fit,minmax(300px,1fr))",
-
+              "repeat(auto-fit,minmax(min(100%,300px),1fr))",
             gap: "40px",
-
             alignItems: "center",
           }}
         >
@@ -481,24 +547,14 @@ export default function Home() {
             <div
               style={{
                 display: "inline-flex",
-
                 alignItems: "center",
-
                 gap: "8px",
-
                 background: "rgba(255,255,255,.1)",
-
-                border:
-                  "1px solid rgba(255,255,255,.18)",
-
+                border: "1px solid rgba(255,255,255,.18)",
                 borderRadius: "999px",
-
                 padding: "8px 13px",
-
                 fontSize: "13px",
-
                 fontWeight: 800,
-
                 color: "#dcecff",
               }}
             >
@@ -509,13 +565,9 @@ export default function Home() {
             <h1
               style={{
                 margin: "22px 0 0",
-
                 fontSize: "clamp(40px,7vw,66px)",
-
                 lineHeight: 1.12,
-
-                letterSpacing: "-3.5px",
-
+                letterSpacing: "-3px",
                 fontWeight: 950,
               }}
             >
@@ -527,31 +579,25 @@ export default function Home() {
             <p
               style={{
                 margin: "22px 0 0",
-
                 maxWidth: "610px",
-
                 fontSize: "17px",
-
                 lineHeight: 1.9,
-
                 color: "#ccdaea",
               }}
             >
+              서울·경기·인천 누수탐지 및 누수 상담.
+              <br />
               수도배관 · 욕실 방수 · 천장 물샘 · 옥상방수
               <br />
               누수 증상과 발생 위치를 확인하고
-              <br />
               현장에 필요한 작업을 안내합니다.
             </p>
 
             <div
               style={{
                 display: "flex",
-
                 gap: "10px",
-
                 flexWrap: "wrap",
-
                 marginTop: "28px",
               }}
             >
@@ -559,17 +605,11 @@ export default function Home() {
                 href={PHONE_LINK}
                 style={{
                   textDecoration: "none",
-
                   background: "#fff",
-
                   color: "#0758a7",
-
                   padding: "16px 23px",
-
                   borderRadius: "12px",
-
                   fontWeight: 950,
-
                   fontSize: "16px",
                 }}
               >
@@ -580,20 +620,12 @@ export default function Home() {
                 href={SMS_LINK}
                 style={{
                   textDecoration: "none",
-
                   background: "rgba(255,255,255,.12)",
-
-                  border:
-                    "1px solid rgba(255,255,255,.22)",
-
+                  border: "1px solid rgba(255,255,255,.22)",
                   color: "#fff",
-
                   padding: "16px 23px",
-
                   borderRadius: "12px",
-
                   fontWeight: 900,
-
                   fontSize: "16px",
                 }}
               >
@@ -604,20 +636,15 @@ export default function Home() {
             <div
               style={{
                 marginTop: "24px",
-
                 display: "flex",
-
                 alignItems: "center",
-
                 gap: "12px",
-
                 flexWrap: "wrap",
               }}
             >
               <span
                 style={{
                   fontSize: "14px",
-
                   color: "#abc7e7",
                 }}
               >
@@ -639,25 +666,17 @@ export default function Home() {
           <div
             style={{
               background: "rgba(255,255,255,.97)",
-
               borderRadius: "24px",
-
               padding: "26px",
-
               color: "#0f172a",
-
-              boxShadow:
-                "0 28px 70px rgba(0,0,0,.22)",
+              boxShadow: "0 28px 70px rgba(0,0,0,.22)",
             }}
           >
             <div
               style={{
                 display: "flex",
-
                 alignItems: "center",
-
                 gap: "14px",
-
                 marginBottom: "22px",
               }}
             >
@@ -675,9 +694,7 @@ export default function Home() {
                 <div
                   style={{
                     fontSize: "13px",
-
                     color: "#0874d9",
-
                     fontWeight: 900,
                   }}
                 >
@@ -687,9 +704,7 @@ export default function Home() {
                 <div
                   style={{
                     marginTop: "3px",
-
                     fontSize: "23px",
-
                     fontWeight: 950,
                   }}
                 >
@@ -704,13 +719,11 @@ export default function Home() {
                 "누수 원인 점검",
                 "배관·방수·외부 유입 가능성 확인",
               ],
-
               [
                 "02",
                 "필요 범위 확인",
-                "불필요한 작업을 줄이고 원인 중심 점검",
+                "원인에 맞는 점검 범위 검토",
               ],
-
               [
                 "03",
                 "현장 맞춤 안내",
@@ -721,36 +734,23 @@ export default function Home() {
                 key={number}
                 style={{
                   display: "flex",
-
                   gap: "14px",
-
                   padding: "16px 0",
-
                   borderTop: "1px solid #edf1f5",
                 }}
               >
                 <div
                   style={{
                     width: "37px",
-
                     height: "37px",
-
                     borderRadius: "10px",
-
                     background: "#eaf5ff",
-
                     color: "#0874d9",
-
                     fontSize: "12px",
-
                     fontWeight: 950,
-
                     display: "flex",
-
                     alignItems: "center",
-
                     justifyContent: "center",
-
                     flexShrink: 0,
                   }}
                 >
@@ -761,7 +761,6 @@ export default function Home() {
                   <div
                     style={{
                       fontWeight: 900,
-
                       fontSize: "16px",
                     }}
                   >
@@ -771,11 +770,8 @@ export default function Home() {
                   <div
                     style={{
                       marginTop: "4px",
-
                       color: "#64748b",
-
                       fontSize: "13px",
-
                       lineHeight: 1.6,
                     }}
                   >
@@ -788,11 +784,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================
-          서비스
-      ===================================== */}
+      {/* 서비스 */}
 
       <section
+        id="services"
         style={{
           padding: "74px 20px",
         }}
@@ -800,7 +795,6 @@ export default function Home() {
         <div
           style={{
             maxWidth: "1180px",
-
             margin: "0 auto",
           }}
         >
@@ -812,9 +806,7 @@ export default function Home() {
             <div
               style={{
                 color: "#0874d9",
-
                 fontSize: "13px",
-
                 fontWeight: 950,
               }}
             >
@@ -824,9 +816,7 @@ export default function Home() {
             <h2
               style={{
                 margin: "8px 0 0",
-
                 fontSize: "clamp(30px,5vw,43px)",
-
                 letterSpacing: "-2px",
               }}
             >
@@ -837,10 +827,8 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-
               gridTemplateColumns:
-                "repeat(auto-fit,minmax(260px,1fr))",
-
+                "repeat(auto-fit,minmax(min(100%,260px),1fr))",
               gap: "16px",
             }}
           >
@@ -850,40 +838,27 @@ export default function Home() {
                 href={`/services/${service.slug}`}
                 style={{
                   textDecoration: "none",
-
                   color: "inherit",
                 }}
               >
                 <article
                   style={{
                     height: "100%",
-
                     background: "#fff",
-
-                    border:
-                      "1px solid #e4eaf0",
-
+                    border: "1px solid #e4eaf0",
                     borderRadius: "19px",
-
                     padding: "24px",
                   }}
                 >
                   <div
                     style={{
                       width: "50px",
-
                       height: "50px",
-
                       borderRadius: "14px",
-
                       background: "#edf7ff",
-
                       display: "flex",
-
                       alignItems: "center",
-
                       justifyContent: "center",
-
                       fontSize: "25px",
                     }}
                   >
@@ -893,11 +868,8 @@ export default function Home() {
                   <div
                     style={{
                       marginTop: "18px",
-
                       color: "#0874d9",
-
                       fontSize: "12px",
-
                       fontWeight: 900,
                     }}
                   >
@@ -907,7 +879,6 @@ export default function Home() {
                   <h3
                     style={{
                       margin: "5px 0 0",
-
                       fontSize: "23px",
                     }}
                   >
@@ -917,16 +888,24 @@ export default function Home() {
                   <p
                     style={{
                       margin: "11px 0 0",
-
                       color: "#697586",
-
                       lineHeight: 1.7,
-
                       fontSize: "14px",
                     }}
                   >
                     {service.description}
                   </p>
+
+                  <div
+                    style={{
+                      marginTop: "16px",
+                      color: "#0874d9",
+                      fontSize: "13px",
+                      fontWeight: 900,
+                    }}
+                  >
+                    자세히 보기 →
+                  </div>
                 </article>
               </Link>
             ))}
@@ -934,37 +913,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================
-          실제 작업사례
-      ===================================== */}
+      {/* 실제 작업사례 */}
 
       <section
+        id="work"
         style={{
           padding: "74px 20px",
-
           background: "#edf5fb",
         }}
       >
         <div
           style={{
             maxWidth: "1180px",
-
             margin: "0 auto",
           }}
         >
           <div
             style={{
               textAlign: "center",
-
               marginBottom: "36px",
             }}
           >
             <div
               style={{
                 color: "#0874d9",
-
                 fontSize: "13px",
-
                 fontWeight: 950,
               }}
             >
@@ -974,9 +947,7 @@ export default function Home() {
             <h2
               style={{
                 margin: "8px 0 0",
-
                 fontSize: "clamp(30px,5vw,42px)",
-
                 letterSpacing: "-2px",
               }}
             >
@@ -986,11 +957,8 @@ export default function Home() {
             <p
               style={{
                 margin: "12px auto 0",
-
                 maxWidth: "680px",
-
                 color: "#64748b",
-
                 lineHeight: 1.8,
               }}
             >
@@ -1003,10 +971,8 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-
               gridTemplateColumns:
-                "repeat(auto-fit,minmax(280px,1fr))",
-
+                "repeat(auto-fit,minmax(min(100%,280px),1fr))",
               gap: "18px",
             }}
           >
@@ -1016,48 +982,32 @@ export default function Home() {
                 href={item.href}
                 style={{
                   textDecoration: "none",
-
                   color: "inherit",
                 }}
               >
                 <article
                   style={{
                     background: "#fff",
-
                     borderRadius: "20px",
-
                     overflow: "hidden",
-
-                    border:
-                      "1px solid #dfe7ef",
-
+                    border: "1px solid #dfe7ef",
                     boxShadow:
                       "0 8px 26px rgba(15,23,42,.05)",
-
                     height: "100%",
                   }}
                 >
-                  {/* 옥상방수 전후 */}
-
                   {item.type === "beforeAfter" ? (
                     <div
                       style={{
                         display: "grid",
-
-                        gridTemplateColumns:
-                          "1fr 1fr",
+                        gridTemplateColumns: "1fr 1fr",
                       }}
                     >
-                      {/* BEFORE */}
-
                       <div
                         style={{
                           position: "relative",
-
                           aspectRatio: "1 / 1",
-
                           overflow: "hidden",
-
                           background: "#e5e7eb",
                         }}
                       >
@@ -1065,7 +1015,7 @@ export default function Home() {
                           src={item.before}
                           alt="옥상방수 작업 전"
                           fill
-                          sizes="50vw"
+                          sizes="(max-width:768px) 50vw, 17vw"
                           style={{
                             objectFit: "cover",
                           }}
@@ -1074,22 +1024,14 @@ export default function Home() {
                         <div
                           style={{
                             position: "absolute",
-
                             left: "10px",
-
                             top: "10px",
-
                             background:
                               "rgba(15,23,42,.88)",
-
                             color: "#fff",
-
                             borderRadius: "999px",
-
                             padding: "6px 10px",
-
                             fontSize: "11px",
-
                             fontWeight: 950,
                           }}
                         >
@@ -1097,27 +1039,20 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* AFTER */}
-
                       <div
                         style={{
                           position: "relative",
-
                           aspectRatio: "1 / 1",
-
                           overflow: "hidden",
-
                           background: "#e5e7eb",
-
-                          borderLeft:
-                            "2px solid #ffffff",
+                          borderLeft: "2px solid #fff",
                         }}
                       >
                         <Image
                           src={item.after}
                           alt="옥상방수 작업 후"
                           fill
-                          sizes="50vw"
+                          sizes="(max-width:768px) 50vw, 17vw"
                           style={{
                             objectFit: "cover",
                           }}
@@ -1126,22 +1061,14 @@ export default function Home() {
                         <div
                           style={{
                             position: "absolute",
-
                             left: "10px",
-
                             top: "10px",
-
                             background:
                               "rgba(8,116,217,.92)",
-
                             color: "#fff",
-
                             borderRadius: "999px",
-
                             padding: "6px 10px",
-
                             fontSize: "11px",
-
                             fontWeight: 950,
                           }}
                         >
@@ -1150,18 +1077,12 @@ export default function Home() {
                       </div>
                     </div>
                   ) : (
-                    /* 일반 사진 */
-
                     <div
                       style={{
                         position: "relative",
-
                         width: "100%",
-
                         aspectRatio: "4 / 3",
-
                         background: "#e5e7eb",
-
                         overflow: "hidden",
                       }}
                     >
@@ -1169,7 +1090,7 @@ export default function Home() {
                         src={item.src}
                         alt={item.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width:768px) 100vw, 33vw"
                         style={{
                           objectFit: "cover",
                         }}
@@ -1178,22 +1099,14 @@ export default function Home() {
                       <div
                         style={{
                           position: "absolute",
-
                           left: "14px",
-
                           top: "14px",
-
                           background:
                             "rgba(7,27,52,.88)",
-
                           color: "#fff",
-
                           borderRadius: "999px",
-
                           padding: "7px 11px",
-
                           fontSize: "11px",
-
                           fontWeight: 900,
                         }}
                       >
@@ -1201,8 +1114,6 @@ export default function Home() {
                       </div>
                     </div>
                   )}
-
-                  {/* 설명 */}
 
                   <div
                     style={{
@@ -1212,9 +1123,7 @@ export default function Home() {
                     <h3
                       style={{
                         margin: 0,
-
                         fontSize: "21px",
-
                         letterSpacing: "-0.8px",
                       }}
                     >
@@ -1224,11 +1133,8 @@ export default function Home() {
                     <p
                       style={{
                         margin: "9px 0 0",
-
                         color: "#64748b",
-
                         fontSize: "14px",
-
                         lineHeight: 1.7,
                       }}
                     >
@@ -1238,11 +1144,8 @@ export default function Home() {
                     <div
                       style={{
                         marginTop: "15px",
-
                         color: "#0874d9",
-
                         fontSize: "13px",
-
                         fontWeight: 900,
                       }}
                     >
@@ -1256,32 +1159,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================
-          누수 체크
-      ===================================== */}
+      {/* 누수 증상 체크 */}
 
       <section
         style={{
           padding: "70px 20px",
-
           background: "#0d223a",
-
           color: "#fff",
         }}
       >
         <div
           style={{
             maxWidth: "1100px",
-
             margin: "0 auto",
-
             display: "grid",
-
             gridTemplateColumns:
-              "repeat(auto-fit,minmax(290px,1fr))",
-
+              "repeat(auto-fit,minmax(min(100%,290px),1fr))",
             gap: "40px",
-
             alignItems: "center",
           }}
         >
@@ -1289,9 +1183,7 @@ export default function Home() {
             <div
               style={{
                 color: "#5bb7ff",
-
                 fontSize: "13px",
-
                 fontWeight: 950,
               }}
             >
@@ -1301,11 +1193,8 @@ export default function Home() {
             <h2
               style={{
                 margin: "10px 0 0",
-
                 fontSize: "clamp(30px,5vw,42px)",
-
                 lineHeight: 1.3,
-
                 letterSpacing: "-2px",
               }}
             >
@@ -1317,9 +1206,7 @@ export default function Home() {
             <p
               style={{
                 margin: "18px 0 0",
-
                 color: "#aebed0",
-
                 lineHeight: 1.8,
               }}
             >
@@ -1331,11 +1218,8 @@ export default function Home() {
           <div
             style={{
               background: "#fff",
-
               color: "#142033",
-
               borderRadius: "20px",
-
               padding: "10px 24px",
             }}
           >
@@ -1346,18 +1230,14 @@ export default function Home() {
               "벽지 또는 장판에 습기와 곰팡이가 생깁니다.",
               "욕실 사용 후 아랫집에서 누수 연락이 옵니다.",
               "비가 오는 날 창틀이나 천장에서 물이 들어옵니다.",
-            ].map((text, index, array) => (
+            ].map((item, index, array) => (
               <div
-                key={text}
+                key={item}
                 style={{
                   display: "flex",
-
                   alignItems: "flex-start",
-
                   gap: "12px",
-
                   padding: "17px 0",
-
                   borderBottom:
                     index === array.length - 1
                       ? "none"
@@ -1367,25 +1247,15 @@ export default function Home() {
                 <div
                   style={{
                     width: "25px",
-
                     height: "25px",
-
                     borderRadius: "50%",
-
                     background: "#e7f4ff",
-
                     color: "#0874d9",
-
                     fontSize: "12px",
-
                     fontWeight: 950,
-
                     display: "flex",
-
                     alignItems: "center",
-
                     justifyContent: "center",
-
                     flexShrink: 0,
                   }}
                 >
@@ -1395,13 +1265,11 @@ export default function Home() {
                 <div
                   style={{
                     fontSize: "14px",
-
                     lineHeight: 1.65,
-
                     fontWeight: 750,
                   }}
                 >
-                  {text}
+                  {item}
                 </div>
               </div>
             ))}
@@ -1409,37 +1277,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================
-          작업 절차
-      ===================================== */}
+      {/* 작업 절차 */}
 
       <section
         style={{
           padding: "72px 20px",
-
           background: "#fff",
         }}
       >
         <div
           style={{
             maxWidth: "1120px",
-
             margin: "0 auto",
           }}
         >
           <div
             style={{
               textAlign: "center",
-
               marginBottom: "37px",
             }}
           >
             <div
               style={{
                 color: "#0874d9",
-
                 fontSize: "13px",
-
                 fontWeight: 950,
               }}
             >
@@ -1449,9 +1310,7 @@ export default function Home() {
             <h2
               style={{
                 margin: "8px 0 0",
-
                 fontSize: "36px",
-
                 letterSpacing: "-2px",
               }}
             >
@@ -1462,10 +1321,8 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-
               gridTemplateColumns:
-                "repeat(auto-fit,minmax(215px,1fr))",
-
+                "repeat(auto-fit,minmax(min(100%,215px),1fr))",
               gap: "14px",
             }}
           >
@@ -1475,19 +1332,16 @@ export default function Home() {
                 "상담 접수",
                 "지역과 현재 증상을 확인합니다.",
               ],
-
               [
                 "02",
                 "현장 확인",
                 "물샘 흔적과 발생 시점을 확인합니다.",
               ],
-
               [
                 "03",
                 "원인 점검",
                 "배관·방수·외부 유입 가능성을 확인합니다.",
               ],
-
               [
                 "04",
                 "작업 안내",
@@ -1498,21 +1352,15 @@ export default function Home() {
                 key={number}
                 style={{
                   padding: "25px",
-
                   background: "#f7f9fc",
-
-                  border:
-                    "1px solid #e7ebf0",
-
+                  border: "1px solid #e7ebf0",
                   borderRadius: "17px",
                 }}
               >
                 <div
                   style={{
                     fontSize: "12px",
-
                     color: "#0874d9",
-
                     fontWeight: 950,
                   }}
                 >
@@ -1522,9 +1370,7 @@ export default function Home() {
                 <div
                   style={{
                     marginTop: "10px",
-
                     fontSize: "21px",
-
                     fontWeight: 950,
                   }}
                 >
@@ -1534,11 +1380,8 @@ export default function Home() {
                 <div
                   style={{
                     marginTop: "8px",
-
                     color: "#697586",
-
                     fontSize: "14px",
-
                     lineHeight: 1.7,
                   }}
                 >
@@ -1550,37 +1393,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================
-          출장지역
-      ===================================== */}
+      {/* 출장지역 */}
 
       <section
+        id="regions"
         style={{
           padding: "72px 20px",
-
           background: "#eef5fb",
         }}
       >
         <div
           style={{
             maxWidth: "1120px",
-
             margin: "0 auto",
           }}
         >
           <div
             style={{
               textAlign: "center",
-
               marginBottom: "34px",
             }}
           >
             <div
               style={{
                 color: "#0874d9",
-
                 fontSize: "13px",
-
                 fontWeight: 950,
               }}
             >
@@ -1590,9 +1427,7 @@ export default function Home() {
             <h2
               style={{
                 margin: "8px 0 0",
-
                 fontSize: "36px",
-
                 letterSpacing: "-2px",
               }}
             >
@@ -1602,8 +1437,8 @@ export default function Home() {
             <p
               style={{
                 margin: "10px 0 0",
-
                 color: "#64748b",
+                lineHeight: 1.7,
               }}
             >
               서울 · 경기 · 인천 주요 지역
@@ -1613,7 +1448,6 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-
               gap: "16px",
             }}
           >
@@ -1622,19 +1456,14 @@ export default function Home() {
                 key={region.slug}
                 style={{
                   background: "#fff",
-
                   borderRadius: "20px",
-
                   padding: "24px",
-
-                  border:
-                    "1px solid #dfe7ef",
+                  border: "1px solid #dfe7ef",
                 }}
               >
                 <h3
                   style={{
                     margin: "0 0 17px",
-
                     fontSize: "23px",
                   }}
                 >
@@ -1644,9 +1473,7 @@ export default function Home() {
                 <div
                   style={{
                     display: "flex",
-
                     gap: "8px",
-
                     flexWrap: "wrap",
                   }}
                 >
@@ -1656,24 +1483,16 @@ export default function Home() {
                       href={`/regions/${region.slug}/${district.slug}`}
                       style={{
                         textDecoration: "none",
-
                         color: "#334155",
-
                         background: "#f6f8fb",
-
-                        border:
-                          "1px solid #e2e8f0",
-
+                        border: "1px solid #e2e8f0",
                         padding: "10px 13px",
-
                         borderRadius: "9px",
-
                         fontSize: "13px",
-
                         fontWeight: 800,
                       }}
                     >
-                      {district.name}
+                      {district.name} 누수탐지
                     </Link>
                   ))}
                 </div>
@@ -1683,35 +1502,110 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================
-          CTA
-      ===================================== */}
+      {/* FAQ */}
+
+      <section
+        style={{
+          padding: "70px 20px",
+          background: "#fff",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "950px",
+            margin: "0 auto",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: "30px",
+            }}
+          >
+            <div
+              style={{
+                color: "#0874d9",
+                fontSize: "13px",
+                fontWeight: 950,
+              }}
+            >
+              FAQ
+            </div>
+
+            <h2
+              style={{
+                margin: "8px 0 0",
+                fontSize: "clamp(28px,5vw,38px)",
+                letterSpacing: "-1px",
+              }}
+            >
+              누수 상담 자주 묻는 질문
+            </h2>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gap: "14px",
+            }}
+          >
+            {FAQS.map((faq) => (
+              <article
+                key={faq.question}
+                style={{
+                  padding: "24px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: "16px",
+                }}
+              >
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: "17px",
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Q. {faq.question}
+                </h3>
+
+                <p
+                  style={{
+                    margin: "10px 0 0",
+                    color: "#64748b",
+                    lineHeight: 1.9,
+                    fontSize: "14px",
+                  }}
+                >
+                  A. {faq.answer}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
 
       <section
         style={{
           padding: "72px 20px",
-
           background:
             "linear-gradient(135deg,#0758aa,#087be0)",
-
           color: "#fff",
-
           textAlign: "center",
         }}
       >
         <div
           style={{
             maxWidth: "760px",
-
             margin: "0 auto",
           }}
         >
           <div
             style={{
               fontSize: "13px",
-
               fontWeight: 900,
-
               color: "#cde7ff",
             }}
           >
@@ -1721,11 +1615,8 @@ export default function Home() {
           <h2
             style={{
               margin: "10px 0 0",
-
               fontSize: "clamp(30px,6vw,43px)",
-
               letterSpacing: "-2px",
-
               lineHeight: 1.3,
             }}
           >
@@ -1737,9 +1628,7 @@ export default function Home() {
           <p
             style={{
               margin: "16px 0 0",
-
               color: "#d9edff",
-
               lineHeight: 1.8,
             }}
           >
@@ -1750,13 +1639,9 @@ export default function Home() {
           <div
             style={{
               display: "flex",
-
               justifyContent: "center",
-
               flexWrap: "wrap",
-
               gap: "10px",
-
               marginTop: "26px",
             }}
           >
@@ -1764,15 +1649,10 @@ export default function Home() {
               href={PHONE_LINK}
               style={{
                 background: "#fff",
-
                 color: "#0759ad",
-
                 textDecoration: "none",
-
                 padding: "16px 24px",
-
                 borderRadius: "12px",
-
                 fontWeight: 950,
               }}
             >
@@ -1783,15 +1663,10 @@ export default function Home() {
               href={SMS_LINK}
               style={{
                 background: "#0b223a",
-
                 color: "#fff",
-
                 textDecoration: "none",
-
                 padding: "16px 24px",
-
                 borderRadius: "12px",
-
                 fontWeight: 950,
               }}
             >
@@ -1801,44 +1676,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =====================================
-          FOOTER
-      ===================================== */}
+      {/* FOOTER */}
 
       <footer
         style={{
           background: "#071625",
-
           color: "#90a1b4",
-
-          padding: "38px 20px 100px",
+          padding: "38px 20px 40px",
         }}
       >
         <div
           style={{
             maxWidth: "1100px",
-
             margin: "0 auto",
-
             lineHeight: 1.9,
-
             fontSize: "13px",
           }}
         >
           <div
             style={{
               display: "flex",
-
               alignItems: "center",
-
               gap: "9px",
-
               marginBottom: "14px",
             }}
           >
             <Image
               src={LOGO}
-              alt="누수대학"
+              alt="누수대학 로고"
               width={36}
               height={36}
               style={{
@@ -1849,7 +1714,6 @@ export default function Home() {
             <strong
               style={{
                 color: "#fff",
-
                 fontSize: "20px",
               }}
             >
@@ -1858,33 +1722,22 @@ export default function Home() {
           </div>
 
           <div>대표자 : {OWNER}</div>
-
           <div>대표전화 : {PHONE_DISPLAY}</div>
-
-          <div>홈페이지 : nusudaehak.com</div>
+          <div>홈페이지 : www.nusudaehak.com</div>
         </div>
       </footer>
 
-      {/* =====================================
-          모바일 하단 고정
-      ===================================== */}
+      {/* 하단 고정 상담 버튼 */}
 
       <div
         style={{
           position: "fixed",
-
           bottom: 0,
-
           left: 0,
-
           right: 0,
-
           zIndex: 999,
-
           display: "grid",
-
           gridTemplateColumns: "1fr 1fr",
-
           boxShadow:
             "0 -8px 25px rgba(0,0,0,.15)",
         }}
@@ -1893,17 +1746,11 @@ export default function Home() {
           href={PHONE_LINK}
           style={{
             background: "#0874d9",
-
             color: "#fff",
-
             textDecoration: "none",
-
             textAlign: "center",
-
             padding: "17px 10px",
-
             fontWeight: 950,
-
             fontSize: "16px",
           }}
         >
@@ -1914,17 +1761,11 @@ export default function Home() {
           href={SMS_LINK}
           style={{
             background: "#101827",
-
             color: "#fff",
-
             textDecoration: "none",
-
             textAlign: "center",
-
             padding: "17px 10px",
-
             fontWeight: 950,
-
             fontSize: "16px",
           }}
         >
