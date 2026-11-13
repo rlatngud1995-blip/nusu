@@ -1,10 +1,12 @@
+
 import type { MetadataRoute } from "next";
 
 /* =====================================
-   누수대학 사이트맵
+   누수대학 기본 주소
 ===================================== */
 
-const SITE_URL = "https://www.nusudaehak.com";
+const SITE_URL =
+  "https://www.nusudaehak.com";
 
 /* =====================================
    서비스 목록
@@ -17,126 +19,130 @@ const SERVICES = [
   "ceiling-leak",
   "water-leak",
   "apartment-leak",
-];
+] as const;
 
 /* =====================================
-   지역 목록
+   서울·경기·인천 지역
 ===================================== */
 
-const REGIONS = [
-  {
-    region: "seoul",
-    districts: [
-      "jongno",
-      "jung",
-      "yongsan",
-      "seongdong",
-      "gwangjin",
-      "dongdaemun",
-      "seongbuk",
-      "mapo",
-      "seodaemun",
-      "yeongdeungpo",
-      "dongjak",
-      "gwanak",
-      "seocho",
-      "gangnam",
-    ],
-  },
+const REGIONS = {
+  seoul: [
+    "jongno",
+    "jung",
+    "yongsan",
+    "seongdong",
+    "gwangjin",
+    "dongdaemun",
+    "seongbuk",
+    "mapo",
+    "seodaemun",
+    "yeongdeungpo",
+    "dongjak",
+    "gwanak",
+    "seocho",
+    "gangnam",
+  ],
 
-  {
-    region: "gyeonggi",
-    districts: [
-      "bucheon",
-      "siheung",
-      "ansan",
-      "anyang",
-      "suwon",
-      "hwaseong",
-      "pyeongtaek",
-      "uiwang",
-      "gimpo",
-      "paju",
-      "gwangmyeong",
-      "gwacheon",
-    ],
-  },
+  gyeonggi: [
+    "bucheon",
+    "siheung",
+    "ansan",
+    "anyang",
+    "suwon",
+    "hwaseong",
+    "pyeongtaek",
+    "uiwang",
+    "gimpo",
+    "paju",
+    "gwangmyeong",
+    "gwacheon",
+  ],
 
-  {
-    region: "incheon",
-    districts: [
-      "gyeyang",
-      "bupyeong",
-      "seo",
-      "namdong",
-    ],
-  },
-];
+  incheon: [
+    "gyeyang",
+    "bupyeong",
+    "seo",
+    "namdong",
+  ],
+} as const;
 
 /* =====================================
    사이트맵 생성
 ===================================== */
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-
-  const urls: MetadataRoute.Sitemap = [];
+  const pages: MetadataRoute.Sitemap = [];
 
   /* =====================================
-     메인
+     1. 메인페이지
   ===================================== */
 
-  urls.push({
+  pages.push({
     url: SITE_URL,
-    lastModified: now,
     changeFrequency: "weekly",
     priority: 1,
   });
 
   /* =====================================
-     서비스 페이지
+     2. 서비스별 대표페이지
   ===================================== */
 
   for (const service of SERVICES) {
-    urls.push({
+    pages.push({
       url: `${SITE_URL}/services/${service}`,
-      lastModified: now,
-      changeFrequency: "weekly",
+      changeFrequency: "monthly",
       priority: 0.9,
     });
   }
 
   /* =====================================
-     지역 페이지
+     3. 지역별 안내페이지
   ===================================== */
 
-  for (const region of REGIONS) {
-    for (const district of region.districts) {
-      urls.push({
-        url: `${SITE_URL}/regions/${region.region}/${district}`,
-        lastModified: now,
-        changeFrequency: "weekly",
-        priority: 0.8,
+  for (const [region, districts] of Object.entries(
+    REGIONS
+  )) {
+    for (const district of districts) {
+      pages.push({
+        url:
+          `${SITE_URL}/regions/${region}/${district}`,
+        changeFrequency: "monthly",
+        priority: 0.7,
       });
     }
   }
 
   /* =====================================
-     서비스 × 지역 상세페이지
+     4. 서비스 × 지역 상세페이지
   ===================================== */
 
   for (const service of SERVICES) {
-    for (const region of REGIONS) {
-      for (const district of region.districts) {
-        urls.push({
-          url: `${SITE_URL}/services/${service}/${region.region}/${district}`,
-          lastModified: now,
-          changeFrequency: "weekly",
+    for (const [region, districts] of Object.entries(
+      REGIONS
+    )) {
+      for (const district of districts) {
+        pages.push({
+          url:
+            `${SITE_URL}/services/${service}/${region}/${district}`,
+          changeFrequency: "monthly",
           priority: 0.8,
         });
       }
     }
   }
 
-  return urls;
+  /* =====================================
+     중복 URL 제거
+  ===================================== */
+
+  const uniquePages = Array.from(
+    new Map(
+      pages.map((page) => [
+        page.url,
+        page,
+      ])
+    ).values()
+  );
+
+  return uniquePages;
 }
